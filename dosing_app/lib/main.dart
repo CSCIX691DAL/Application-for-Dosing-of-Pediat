@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'med_1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -103,11 +104,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
+            // medication 1
             InkWell(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SecondRoute()),
+                  MaterialPageRoute(builder: (context) => const Med1()),
                 );
               },
               child: Card(
@@ -121,11 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            GestureDetector(
+            // medication 2
+            InkWell(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SecondRoute()),
+                  MaterialPageRoute(builder: (context) => const Med1()),
                 );
               },
               child: Card(
@@ -139,11 +142,221 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            GestureDetector(
+            // medication 3
+            InkWell(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SecondRoute()),
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 4
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 5
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 6
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 7
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 8
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 9
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 10
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 11
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 12
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 13
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  leading: FlutterLogo(size: 72.0),
+                  title: Text('First Item In My List'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true,
+                ),
+              ),
+            ),
+            // medication 14
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Med1()),
                 );
               },
               child: Card(
@@ -160,32 +373,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Second Route"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go back!'),
-        ),
-      ),
     );
   }
 }
