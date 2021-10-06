@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'med_1.dart';
+import 'medications/med_1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -374,10 +374,23 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Favourites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'All',
+          ),
+        ],
+        // currentIndex: _selectedIndex,
+        // onTap: _onItemTapped,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
