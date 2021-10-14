@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'all_page.dart';
+// import 'all_page.dart';
+import 'home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.indigo,
       ),
-      home: const AllPage(title: 'Dosing App'),
+      home: const HomePage(),
     );
   }
 }
