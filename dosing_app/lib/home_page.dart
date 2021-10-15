@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'all_page.dart';
 import 'favs_page.dart';
@@ -10,8 +11,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> medications = [
+    {
+      'name': 'Medication 1',
+      'description': 'Calculate the dosage for medication 1',
+    },
+    {
+      'name': 'Medication 2',
+      'description': 'Calculate the dosage for medication 2',
+    },
+    {
+      'name': 'Medication 3',
+      'description': 'Calculate the dosage for medication 3',
+    },
+  ];
+  Set<Map<String, dynamic>> favMedications = Set<Map<String, dynamic>>();
   PageController _pageController = PageController();
-  List<Widget> _screens = [AllPage(), FavouritesPage()];
 
   // Changing the state of the bottom nav bar
   int _selectedIndex = 0;
@@ -22,11 +37,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int selectedIndex) {
+    // log('data: $medications[0]');
     _pageController.jumpToPage(selectedIndex);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _screens = [
+      AllPage(
+        medications: medications,
+        favMedications: favMedications,
+      ),
+      FavouritesPage(
+        medications: medications,
+        favMedications: favMedications,
+      ),
+    ];
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -68,7 +94,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.star,
+              Icons.bookmark,
               color: _selectedIndex == 1 ? Colors.indigo : Colors.grey,
             ),
             label: 'Favourites',
