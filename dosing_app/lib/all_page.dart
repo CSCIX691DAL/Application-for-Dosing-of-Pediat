@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'medications/med_1.dart';
-import 'medication.dart';
 
 class AllPage extends StatefulWidget {
   AllPage({Key? key, required this.medications, required this.favMedications})
@@ -13,22 +12,6 @@ class AllPage extends StatefulWidget {
 }
 
 class _AllPageState extends State<AllPage> {
-  // List<Map<String, dynamic>> medications = [
-  //   {
-  //     'name': 'Medication 1',
-  //     'description': 'Calculate the dosage for medication 1',
-  //   },
-  //   {
-  //     'name': 'Medication 2',
-  //     'description': 'Calculate the dosage for medication 2',
-  //   },
-  //   {
-  //     'name': 'Medication 3',
-  //     'description': 'Calculate the dosage for medication 3',
-  //   },
-  // ];
-  // Set<Map<String, dynamic>> favMedications = Set<Map<String, dynamic>>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,11 +25,13 @@ class _AllPageState extends State<AllPage> {
               separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),
               itemBuilder: (BuildContext context, int index) {
+                String title = widget.medications[index]['name'];
+                String description = widget.medications[index]['description'];
                 return Card(
                   child: ListTile(
                     leading: FlutterLogo(size: 72.0),
-                    title: Text(widget.medications[index]['name']),
-                    subtitle: Text(widget.medications[index]['description']),
+                    title: Text(title),
+                    subtitle: Text(description),
                     isThreeLine: true,
                     onTap: () {
                       Navigator.push(

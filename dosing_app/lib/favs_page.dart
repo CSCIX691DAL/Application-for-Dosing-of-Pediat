@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'medications/med_1.dart';
 
 class FavouritesPage extends StatefulWidget {
   FavouritesPage(
       {Key? key, required this.medications, required this.favMedications})
       : super(key: key);
   dynamic medications;
-  dynamic favMedications = Set<Map<String, dynamic>>();
+  dynamic favMedications;
 
   @override
   _FavouritesPageState createState() => _FavouritesPageState();
@@ -16,7 +17,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("All"),
+          title: const Text("Favourites"),
         ),
         body: Center(
           child: ListView.separated(
@@ -27,21 +28,23 @@ class _FavouritesPageState extends State<FavouritesPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   child: ListTile(
-                      // leading: FlutterLogo(size: 72.0),
-                      // title: Text(widget.favMedications.elementAt(index)),
-                      // subtitle: Text(widget.favMedications.elementAt(index)),
-                      // isThreeLine: true,
-                      // onTap: () {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => Med1(
-                      //             index: index,
-                      //             medications: widget.medications,
-                      //             favMedications: widget.favMedications)),
-                      //   );
-                      // },
-                      ),
+                    leading: FlutterLogo(size: 72.0),
+                    title:
+                        Text(widget.favMedications[index]['name'].toString()),
+                    subtitle: Text(
+                        widget.favMedications[index]['description'].toString()),
+                    isThreeLine: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Med1(
+                                index: index,
+                                medications: widget.medications,
+                                favMedications: widget.favMedications)),
+                      );
+                    },
+                  ),
                 );
               }),
         ));

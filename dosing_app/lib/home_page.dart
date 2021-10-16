@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, dynamic>> medications = [
+  List<Map<String, String>> medications = [
     {
       'name': 'Medication 1',
       'description': 'Calculate the dosage for medication 1',
@@ -25,7 +25,8 @@ class _HomePageState extends State<HomePage> {
       'description': 'Calculate the dosage for medication 3',
     },
   ];
-  Set<Map<String, dynamic>> favMedications = Set<Map<String, dynamic>>();
+  //Set<Map<String, dynamic>> favMedications = Set<Map<String, dynamic>>();
+  List<Map<String, String>> favMedications = [];
   PageController _pageController = PageController();
 
   // Changing the state of the bottom nav bar
@@ -37,7 +38,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int selectedIndex) {
-    // log('data: $medications[0]');
+    print('favs: $favMedications.()');
+    print('all: $medications.()');
+
     _pageController.jumpToPage(selectedIndex);
   }
 
