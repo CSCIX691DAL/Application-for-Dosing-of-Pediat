@@ -23,10 +23,10 @@ class _Med1State extends State<Med1> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Medication 1"),
+        title: const Text("Acitretin"),
         actions: <Widget>[
           Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -36,14 +36,12 @@ class _Med1State extends State<Med1> {
                         widget.favMedications.add(medication);
                       }
                     });
-                    print(widget.favMedications);
                   },
                   child: Icon(
                     isFavourited
                         ? Icons.bookmark
                         : Icons.bookmark_outline_rounded,
                     size: 34,
-                    // color: isFavourited ? Colors,
                   )))
         ],
       ),
