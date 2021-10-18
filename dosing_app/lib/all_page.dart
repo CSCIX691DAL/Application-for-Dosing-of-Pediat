@@ -1,3 +1,4 @@
+import 'package:dosing_app/medications/med_2.dart';
 import 'package:flutter/material.dart';
 import 'medications/med_1.dart';
 
@@ -96,7 +97,7 @@ class _AllPageState extends State<AllPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Med1()),
+                  MaterialPageRoute(builder: (context) => const Med2()),
                 );
               },
               child: Card(
