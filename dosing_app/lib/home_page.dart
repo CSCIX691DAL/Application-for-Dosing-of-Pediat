@@ -1,32 +1,19 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'all_page.dart';
 import 'favs_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  // was const
+  HomePage({Key? key, required this.medications, required this.favMedications})
+      : super(key: key);
+  dynamic medications;
+  dynamic favMedications;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, String>> medications = [
-    {
-      'name': 'Medication 1',
-      'description': 'Calculate the dosage for medication 1',
-    },
-    {
-      'name': 'Medication 2',
-      'description': 'Calculate the dosage for medication 2',
-    },
-    {
-      'name': 'Medication 3',
-      'description': 'Calculate the dosage for medication 3',
-    },
-  ];
-  //Set<Map<String, dynamic>> favMedications = Set<Map<String, dynamic>>();
-  List<Map<String, String>> favMedications = [];
   PageController _pageController = PageController();
 
   // Changing the state of the bottom nav bar
@@ -37,9 +24,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // Change page when navbar is tapped
   void _onItemTapped(int selectedIndex) {
-    print('favs: $favMedications.()');
-    print('all: $medications.()');
+    print('favs: $widget.favMedications.()');
+    print('all: $widget.medications.()');
 
     _pageController.jumpToPage(selectedIndex);
   }
@@ -48,37 +36,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     List<Widget> _screens = [
       AllPage(
-        medications: medications,
-        favMedications: favMedications,
+        medications: widget.medications,
+        favMedications: widget.favMedications,
       ),
       FavouritesPage(
-        medications: medications,
-        favMedications: favMedications,
+        medications: widget.medications,
+        favMedications: widget.favMedications,
       ),
     ];
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.indigo,
-              ),
-              child: Text('Drawer Header'),
-            ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update state of the app
-                // ...
-                // Then close drawer
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
       body: PageView(
         controller: _pageController,
         children: _screens,
@@ -104,7 +70,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

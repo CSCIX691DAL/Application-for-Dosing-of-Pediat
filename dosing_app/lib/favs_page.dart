@@ -20,11 +20,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
           title: const Text("Favourites"),
         ),
         body: Center(
-          child: ListView.separated(
+          child: ListView.builder(
               padding: EdgeInsets.zero,
               itemCount: widget.favMedications.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   child: ListTile(
@@ -35,14 +33,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         widget.favMedications[index]['description'].toString()),
                     isThreeLine: true,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Med1(
-                                index: index,
-                                medications: widget.medications,
-                                favMedications: widget.favMedications)),
-                      );
+                      Navigator.pushNamed(
+                          context, widget.favMedications[index]['route']);
                     },
                   ),
                 );
