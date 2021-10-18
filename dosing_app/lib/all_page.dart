@@ -53,7 +53,8 @@ class _AllPageState extends State<AllPage> {
                     subtitle: Text(description),
                     isThreeLine: true,
                     onTap: () {
-                      Navigator.pushNamed(context, '/med1');
+                      Navigator.pushNamed(
+                          context, widget.medications[index]['route']);
                     },
                   ),
                 );
