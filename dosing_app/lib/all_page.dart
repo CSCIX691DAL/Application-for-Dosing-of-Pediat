@@ -103,7 +103,7 @@ class _AllPageState extends State<AllPage> {
               child: Card(
                 child: ListTile(
                   leading: FlutterLogo(size: 72.0),
-                  title: Text('Medication 2'),
+                  title: Text('Acyclovir'),
                   subtitle: Text(
                       'A sufficiently long subtitle warrants three lines.'),
                   trailing: Icon(Icons.more_vert),
