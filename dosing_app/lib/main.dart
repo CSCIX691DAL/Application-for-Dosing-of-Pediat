@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'medications/med_1.dart';
+import 'medications/Hydroxyzine_1.dart';
 
 void main() {
   // myApp was const
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
     {
       'name': 'Hydroxyzine',
       'description': 'Calculate the dosage for Hydroxyzine',
-      'route': '/med1',
+      'route': '/med8',
     },
     {
       'name': 'Isotretinoin',
@@ -116,6 +117,10 @@ class MyApp extends StatelessWidget {
                 favMedications: favMedications,
               ),
           '/med1': (context) => Med1(
+              index: 0,
+              medications: medications,
+              favMedications: favMedications),
+          '/med8': (context) => Hydroxyzine1(
               index: 0,
               medications: medications,
               favMedications: favMedications)
