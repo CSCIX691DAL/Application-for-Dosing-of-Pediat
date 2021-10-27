@@ -2,6 +2,8 @@ import 'package:dosing_app/medications/med_5.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'medications/med_1.dart';
+import 'medications/med_2.dart';
+import 'medications/med_5.dart';
 
 void main() {
   // myApp was const
@@ -21,17 +23,17 @@ class MyApp extends StatelessWidget {
     {
       'name': 'Acyclovir',
       'description': 'Calculate the dosage for Acyclovir',
-      'route': '/med1',
+      'route': '/med2',
     },
     {
       'name': 'Amoxicillin',
       'description': 'Calculate the dosage for Amoxicillin',
-      'route': '/med1',
+      'route': '/med3',
     },
     {
       'name': 'Azathioprine',
       'description': 'Calculate the dosage for Azathioprine',
-      'route': '/med1',
+      'route': '/med4',
     },
     {
       'name': 'Cephalexin',
@@ -41,62 +43,62 @@ class MyApp extends StatelessWidget {
     {
       'name': 'Cyclosporin',
       'description': 'Calculate the dosage for Cyclosporin',
-      'route': '/med1',
+      'route': '/med6',
     },
     {
       'name': 'Hemangiol/Propranolol',
       'description': 'Calculate the dosage for Hemangiol/Propranolol',
-      'route': '/med1',
+      'route': '/med7',
     },
     {
       'name': 'Hydroxyzine',
       'description': 'Calculate the dosage for Hydroxyzine',
-      'route': '/med1',
+      'route': '/med8',
     },
     {
       'name': 'Isotretinoin',
       'description': 'Calculate the dosage for Isotretinoin',
-      'route': '/med1',
+      'route': '/med9',
     },
     {
       'name': 'Itraconazole',
       'description': 'Calculate the dosage for Itraconazole',
-      'route': '/med1',
+      'route': '/med10',
     },
     {
       'name': 'Methotrexate',
       'description': 'Calculate the dosage for Methotrexate',
-      'route': '/med1',
+      'route': '/med11',
     },
     {
       'name': 'Mycophenalate Mofetil',
       'description': 'Calculate the dosage for Mycophenalate Mofetil',
-      'route': '/med1',
+      'route': '/med12',
     },
     {
       'name': 'Mycophenalate Sodium',
       'description': 'Calculate the dosage for Mycophenalate Sodium',
-      'route': '/med1',
+      'route': '/med13',
     },
     {
       'name': 'Prednisolone',
       'description': 'Calculate the dosage for Prednisolone',
-      'route': '/med1',
+      'route': '/med14',
     },
     {
       'name': 'Prednisone',
       'description': 'Calculate the dosage for Prednisone',
-      'route': '/med1',
+      'route': '/med15',
     },
     {
       'name': 'Terbinafine',
       'description': 'Calculate the dosage for Terbinafine',
-      'route': '/med1',
+      'route': '/med16',
     },
     {
       'name': 'Valacyclovir',
       'description': 'Calculate the dosage for Valacyclovir',
-      'route': '/med1',
+      'route': '/med17',
     },
   ];
 
@@ -121,12 +123,11 @@ class MyApp extends StatelessWidget {
               medications: medications,
               favMedications: favMedications),
           '/med5': (context) => Med5(
-            index:4,
-            medications: medications,
-            favMedications: favMedications)
+              index: 4,
+              medications: medications,
+              favMedications: favMedications)
         }
         // home: const HomePage(),
         );
   }
 }
-
