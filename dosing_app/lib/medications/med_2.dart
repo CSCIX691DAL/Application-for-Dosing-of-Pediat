@@ -17,12 +17,13 @@ class Med2 extends StatelessWidget {
         child: Column(
           children: <Widget>[
             formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's su rface area (m2)"),
+            formFieldContainer("Child's surface area (m2)"),
+            dropDownList(
+              listTitle: "Drug concentration (mg/ml)",
+            ),
             formFieldContainer("Child's weight (kg)"),
             //formFieldContainer("Drug concentration (mg/ml)"), //drop down  list
-            dropDownList(
-              some1: "Drug concentration (mg/ml)",
-            ),
+
             formFieldContainer("Child's Weight (kg)"),
             formFieldContainer("Child's Weight (kg)"),
             formFieldContainer("Child's Weight (kg)"),
@@ -36,6 +37,7 @@ class Med2 extends StatelessWidget {
 }
 
 //Stateless widget to create the text form fields
+
 class formFieldContainer extends StatelessWidget {
   final String formTitle;
 
@@ -86,11 +88,13 @@ class formFieldContainer extends StatelessWidget {
   }
 }
 
+//Drop Down list widget
+
 class dropDownList extends StatefulWidget {
   //const dropDownList({this.formTitle = formTitle});
-  String some1; // receives the value
+  String listTitle; // receives the value
 
-  dropDownList({required this.some1});
+  dropDownList({required this.listTitle});
 
   @override
   _dropDownListState createState() => _dropDownListState();
@@ -113,7 +117,7 @@ class _dropDownListState extends State<dropDownList> {
             Container(
               margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
               child: Text(
-                widget.some1,
+                widget.listTitle,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -122,21 +126,23 @@ class _dropDownListState extends State<dropDownList> {
               ),
             ),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.purple.shade900, width: 3),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.purple.shade900, width: 3),
+              ),
+              child: DropdownButtonHideUnderline(
+                //hides the underline in the text
+                child: DropdownButton<String>(
+                  value: value,
+                  iconSize: 36,
+                  icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                  items: items.map(buildMenuItem).toList(),
+                  isExpanded: true,
+                  //onChanged: (value) => setState(() => this.value = value),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: value,
-                    iconSize: 36,
-                    icon: Icon(Icons.arrow_drop_down, color: Colors.black),
-                    items: items.map(buildMenuItem).toList(),
-                    isExpanded: true,
-                    onChanged: (value) => setState(() => this.value = value),
-                  ),
-                ))
+              ),
+            ),
           ],
         ),
       ),
