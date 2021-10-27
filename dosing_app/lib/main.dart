@@ -1,3 +1,4 @@
+import 'package:dosing_app/medications/med_5.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'medications/med_1.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     {
       'name': 'Cephalexin',
       'description': 'Calculate the dosage for Cephalexin',
-      'route': '/med1',
+      'route': '/med5',
     },
     {
       'name': 'Cyclosporin',
@@ -118,7 +119,11 @@ class MyApp extends StatelessWidget {
           '/med1': (context) => Med1(
               index: 0,
               medications: medications,
-              favMedications: favMedications)
+              favMedications: favMedications),
+          '/med5': (context) => Med5(
+            index:4,
+            medications: medications,
+            favMedications: favMedications)
         }
         // home: const HomePage(),
         );
