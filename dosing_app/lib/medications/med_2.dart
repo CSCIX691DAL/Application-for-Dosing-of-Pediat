@@ -3,9 +3,16 @@
 import 'package:flutter/material.dart';
 
 class Med2 extends StatelessWidget {
-  const Med2({
-    Key? key,
-  }) : super(key: key);
+  Med2(
+      {Key? key,
+      required this.index,
+      required this.medications,
+      required this.favMedications})
+      : super(key: key);
+
+  dynamic index;
+  dynamic medications;
+  dynamic favMedications;
 
   @override
   Widget build(BuildContext context) {
