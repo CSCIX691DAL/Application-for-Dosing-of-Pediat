@@ -23,7 +23,7 @@ class _Med1State extends State<Med1> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Medication 1"),
+        title: Text(medication['name']),
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20.0),

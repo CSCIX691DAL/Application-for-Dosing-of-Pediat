@@ -1,36 +1,71 @@
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 
-class Med2 extends StatelessWidget {
-  const Med2({
-    Key? key,
-  }) : super(key: key);
+class Med2 extends StatefulWidget {
+  Med2(
+      {Key? key,
+      required this.index,
+      required this.medications,
+      required this.favMedications})
+      : super(key: key);
+
+  dynamic index;
+  dynamic medications;
+  dynamic favMedications;
 
   @override
+  _Med2State createState() => _Med2State();
+}
+
+class _Med2State extends State<Med2> {
+  @override
   Widget build(BuildContext context) {
+    Map medication = widget.medications[widget.index];
+    bool isFavourited = widget.favMedications.contains(medication);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Acyclovir"),
+        title: Text(medication['name']),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isFavourited) {
+                        widget.favMedications.remove(medication);
+                      } else {
+                        widget.favMedications.add(medication);
+                      }
+                    });
+                    print(widget.favMedications);
+                  },
+                  child: Icon(
+                    isFavourited
+                        ? Icons.bookmark
+                        : Icons.bookmark_outline_rounded,
+                    size: 34,
+                    // color: isFavourited ? Colors,
+                  )))
+        ],
       ),
       backgroundColor: Colors.white, //page background color
 
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's surface area (m2)"),
+            const formFieldContainer("Child's Weight (kg)"),
+            const formFieldContainer("Child's surface area (m2)"),
             dropDownList(
               listTitle: "Drug concentration (mg/ml)",
             ),
-            formFieldContainer("Child's weight (kg)"),
+            const formFieldContainer("Child's weight (kg)"),
             //formFieldContainer("Drug concentration (mg/ml)"), //drop down  list
 
-            formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's Weight (kg)"),
+            const formFieldContainer("Child's Weight (kg)"),
+            const formFieldContainer("Child's Weight (kg)"),
+            const formFieldContainer("Child's Weight (kg)"),
+            const formFieldContainer("Child's Weight (kg)"),
+            const formFieldContainer("Child's Weight (kg)"),
           ],
         ),
       ),
@@ -58,7 +93,7 @@ class formFieldContainer extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
               child: Text(
                 formTitle,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
@@ -71,13 +106,13 @@ class formFieldContainer extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                   borderSide:
                       BorderSide(color: Colors.purple.shade900, width: 3),
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(30),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue.shade400, width: 3),
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(50),
                   ),
                 ),
