@@ -32,6 +32,7 @@ jobs:
     # Checkout gallery code and get packages.
     - name: Checkout gallery code
       uses: actions/checkout@v2
+    - run: cd dosing_app
     - run: flutter pub get
 
     # Build and deploy (by default, to staging).
