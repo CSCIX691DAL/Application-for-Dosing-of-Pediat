@@ -171,12 +171,12 @@ class _dropDownListState extends State<dropDownList> {
               child: DropdownButtonHideUnderline(
                 //hides the underline in the text
                 child: DropdownButton<String>(
+                  onChanged: (value) => setState(() => this.value = value),
                   value: value,
                   iconSize: 36,
                   icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                   items: items.map(buildMenuItem).toList(),
                   isExpanded: true,
-                  onChanged: (value) => setState(() => this.value = value),
                 ),
               ),
             ),
