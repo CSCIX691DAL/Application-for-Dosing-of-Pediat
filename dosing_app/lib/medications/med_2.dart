@@ -176,7 +176,7 @@ class _dropDownListState extends State<dropDownList> {
                   icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                   items: items.map(buildMenuItem).toList(),
                   isExpanded: true,
-                  //onChanged: (value) => setState(() => this.value = value),
+                  onChanged: (value) => setState(() => this.value = value),
                 ),
               ),
             ),
