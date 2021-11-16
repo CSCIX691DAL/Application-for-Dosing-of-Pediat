@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'medications/med_1.dart';
 import 'medications/med_2.dart';
+import 'medications/med_3.dart';
 import 'medications/med_5.dart';
 import 'medications/med_9.dart';
 
@@ -125,6 +126,10 @@ class MyApp extends StatelessWidget {
               favMedications: favMedications),
           '/med2': (context) => Med2(
               index: 1,
+              medications: medications,
+              favMedications: favMedications),
+          '/med3': (context) => Med3(
+              index: 2,
               medications: medications,
               favMedications: favMedications),
           '/med5': (context) => Med5(
