@@ -119,7 +119,7 @@ class _Med1State extends State<Med1> {
                 //           } else {
                 //             numMgText.text = (numMg).toStringAsFixed(2);
                 //           }
-                //           numTabsNeeded = (numMg * mgPerTablet).ceil();
+                //           numTabsNeeded = (numMg / mgPerTablet).ceil();
                 //           if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
                 //             numTabsNeededText.text = (0).toString() + " tablets";
                 //           } else {
@@ -179,7 +179,7 @@ class _Med1State extends State<Med1> {
                         } else {
                           numMgText.text = (numMg).toStringAsFixed(2) + "mg";
                         }
-                        numTabsNeeded = (numMg * mgPerTablet).ceil();
+                        numTabsNeeded = (numMg / mgPerTablet).ceil();
                         if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
                           numTabsNeededText.text = (0).toString() + " tablets";
                         } else {
@@ -216,7 +216,7 @@ class _Med1State extends State<Med1> {
                           } else {
                             numMgText.text = (numMg).toStringAsFixed(2) + "mg";
                           }
-                          numTabsNeeded = (numMg * mgPerTablet).ceil();
+                          numTabsNeeded = (numMg / mgPerTablet).ceil();
                           if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
                             numTabsNeededText.text =
                                 (0).toString() + " tablets";
@@ -274,7 +274,7 @@ class _Med1State extends State<Med1> {
                             numMgText.text = (numMg).toStringAsFixed(2) + "mg";
                           }
 
-                          numTabsNeeded = (numMg * mgPerTablet).ceil();
+                          numTabsNeeded = (numMg / mgPerTablet).ceil();
                           if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
                             numTabsNeededText.text =
                                 (0).toString() + " tablets";
@@ -330,7 +330,7 @@ class _Med1State extends State<Med1> {
                           onChanged: (newValue) {
                             setState(() {
                               mgPerTablet = newValue!;
-                              numTabsNeeded = (numMg * mgPerTablet).ceil();
+                              numTabsNeeded = (numMg / mgPerTablet).ceil();
                               if (numTabsNeeded.isNaN ||
                                   numTabsNeeded.isInfinite) {
                                 numTabsNeededText.text = (0).toStringAsFixed(0);
