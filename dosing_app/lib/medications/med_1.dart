@@ -34,6 +34,7 @@ class _Med1State extends State<Med1> {
   List<int> mgPerTabletItems = [10, 25];
   int mgPerTablet = 10;
 
+  // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
 
   @override
@@ -44,9 +45,33 @@ class _Med1State extends State<Med1> {
 
   @override
   void dispose() {
-    // Clean up the focus node when the Form is disposed.
     myFocusNode.dispose();
     super.dispose();
+  }
+
+  // Functions for each output field
+  void calcTotalDosageNeeded() {
+    totalDoseNeeded = concentrationNeeded * childWeight;
+    totalDoseNeededText.text = (totalDoseNeeded).toStringAsFixed(2) +
+        "mg/dose"; // handle null and String
+  }
+
+  void calcNumMg() {
+    numMg = totalDoseNeeded * numDaysTreatment;
+    if (numMg.isNaN || numMg.isInfinite) {
+      numMgText.text = (0).toStringAsFixed(2) + "mg";
+    } else {
+      numMgText.text = (numMg).toStringAsFixed(2) + "mg";
+    }
+  }
+
+  void calcNumTabsNeeded() {
+    numTabsNeeded = (numMg / mgPerTablet).ceil();
+    if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
+      numTabsNeededText.text = (0).toString() + " tablets";
+    } else {
+      numTabsNeededText.text = (numTabsNeeded).toString() + " tablets";
+    }
   }
 
   @override
@@ -92,43 +117,6 @@ class _Med1State extends State<Med1> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                // *** JUST INCASE WE WANT TO SCRAP SLIDER ***
-                // Drug concentration needed input field
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 20, right: 20, top: 30, bottom: 0),
-                //   child: TextField(
-                //       keyboardType:
-                //           const TextInputType.numberWithOptions(decimal: true),
-                //       decoration: const InputDecoration(
-                //         border: OutlineInputBorder(),
-                //         labelText: "Concentration Needed (mg/kg/dose)",
-                //         hintText: "Concentration Needed (mg/kg/dose)",
-                //       ),
-                //       onChanged: (value) {
-                //         final x = double.tryParse(value);
-                //         setState(() {
-                //           concentrationNeeded = x ?? 0;
-                //           totalDoseNeeded = concentrationNeeded * childWeight;
-                //           totalDoseNeededText.text = (totalDoseNeeded)
-                //               .toStringAsFixed(2) + "mg/dose"; // handle null and String
-                //           numMg = totalDoseNeeded * numDaysTreatment;
-                //           if (numMg.isNaN || numMg.isInfinite) {
-                //             numMgText.text = (0).toStringAsFixed(2);
-                //           } else {
-                //             numMgText.text = (numMg).toStringAsFixed(2);
-                //           }
-                //           numTabsNeeded = (numMg / mgPerTablet).ceil();
-                //           if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-                //             numTabsNeededText.text = (0).toString() + " tablets";
-                //           } else {
-                //             numTabsNeededText.text =
-                //                 (numTabsNeeded).toString() + " tablets";
-                //           }
-                //         });
-                //       }),
-                // ),
-
                 // Concentration needed output field
                 Padding(
                   padding: const EdgeInsets.only(
@@ -168,23 +156,9 @@ class _Med1State extends State<Med1> {
                         concentrationNeeded = value;
                         concentrationNeededText.text =
                             (concentrationNeeded.toString() + "mg/kg/dose");
-                        totalDoseNeeded = concentrationNeeded * childWeight;
-                        totalDoseNeededText.text =
-                            (totalDoseNeeded).toStringAsFixed(2) +
-                                "mg/dose"; // handle null and String
-                        numMg = totalDoseNeeded * numDaysTreatment;
-                        if (numMg.isNaN || numMg.isInfinite) {
-                          numMgText.text = (0).toStringAsFixed(2) + "mg";
-                        } else {
-                          numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-                        }
-                        numTabsNeeded = (numMg / mgPerTablet).ceil();
-                        if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-                          numTabsNeededText.text = (0).toString() + " tablets";
-                        } else {
-                          numTabsNeededText.text =
-                              (numTabsNeeded).toString() + " tablets";
-                        }
+                        calcTotalDosageNeeded();
+                        calcNumMg();
+                        calcNumTabsNeeded();
                       });
                     },
                   ),
@@ -266,21 +240,8 @@ class _Med1State extends State<Med1> {
                         final x = double.tryParse(value);
                         setState(() {
                           numDaysTreatment = x ?? 0;
-                          numMg = totalDoseNeeded * numDaysTreatment;
-                          if (numMg.isNaN || numMg.isInfinite) {
-                            numMgText.text = (0).toStringAsFixed(2) + "mg";
-                          } else {
-                            numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-                          }
-
-                          numTabsNeeded = (numMg / mgPerTablet).ceil();
-                          if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-                            numTabsNeededText.text =
-                                (0).toString() + " tablets";
-                          } else {
-                            numTabsNeededText.text =
-                                (numTabsNeeded).toString() + " tablets";
-                          }
+                          calcNumMg();
+                          calcNumTabsNeeded();
                         });
                       }),
                 ),
@@ -329,14 +290,7 @@ class _Med1State extends State<Med1> {
                           onChanged: (newValue) {
                             setState(() {
                               mgPerTablet = newValue!;
-                              numTabsNeeded = (numMg / mgPerTablet).ceil();
-                              if (numTabsNeeded.isNaN ||
-                                  numTabsNeeded.isInfinite) {
-                                numTabsNeededText.text = (0).toStringAsFixed(0);
-                              } else {
-                                numTabsNeededText.text =
-                                    (numTabsNeeded).toString() + " tablets";
-                              }
+                              calcNumTabsNeeded();
                             });
                           },
                           items: mgPerTabletItems.map((value) {
