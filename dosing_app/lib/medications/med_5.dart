@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class Med5 extends StatefulWidget {
   Med5(
       {Key? key,
-        required this.index,
-        required this.medications,
-        required this.favMedications})
+      required this.index,
+      required this.medications,
+      required this.favMedications})
       : super(key: key);
+
   dynamic index;
   dynamic medications;
   dynamic favMedications;
@@ -14,7 +15,6 @@ class Med5 extends StatefulWidget {
   @override
   _Med5State createState() => _Med5State();
 }
-
 
 class _Med5State extends State<Med5> {
   @override
