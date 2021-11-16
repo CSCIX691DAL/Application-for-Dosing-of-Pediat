@@ -58,11 +58,7 @@ class _Med1State extends State<Med1> {
 
   void calcNumMg() {
     numMg = totalDoseNeeded * numDaysTreatment;
-    if (numMg.isNaN || numMg.isInfinite) {
-      numMgText.text = (0).toStringAsFixed(2) + "mg";
-    } else {
-      numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-    }
+    numMgText.text = (numMg).toStringAsFixed(2) + "mg";
   }
 
   void calcNumTabsNeeded() {
