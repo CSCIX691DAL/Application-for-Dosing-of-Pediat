@@ -77,7 +77,6 @@ class _Med1State extends State<Med1> {
                             widget.favMedications.add(medication);
                           }
                         });
-                        print(widget.favMedications);
                       },
                       child: Icon(
                         isFavourited
