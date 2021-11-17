@@ -179,12 +179,7 @@ class _Med3State extends State<Med3> {
                                 final x = double.tryParse(value);
                                 setState(() {
                                   concentrationNeededT1 = x ?? 0;
-                                  totalDoseNeededMgT1 =
-                                      concentrationNeededT1 * childWeightT1;
-                                  totalDoseNeededMgT1Text.text =
-                                      (totalDoseNeededMgT1).toStringAsFixed(2) +
-                                          "mg/dose"; // handle null and String
-
+                                  calcDosageNeededMgT1();
                                   calcDosageNeededMlT1();
                                   calcDrugRequiredT1();
                                   calcVolumeToDispenseT1();
@@ -208,14 +203,8 @@ class _Med3State extends State<Med3> {
                               onChanged: (value) {
                                 final x = double.tryParse(value);
                                 setState(() {
-                                  childWeightT1 =
-                                      x ?? 0; // handle null and String
-                                  totalDoseNeededMgT1 =
-                                      concentrationNeededT1 * childWeightT1;
-                                  totalDoseNeededMgT1Text.text =
-                                      (totalDoseNeededMgT1).toStringAsFixed(2) +
-                                          "mg/dose"; // handle null and String
-
+                                  childWeightT1 = x ?? 0;
+                                  calcDosageNeededMgT1();
                                   calcDosageNeededMlT1();
                                   calcDrugRequiredT1();
                                   calcVolumeToDispenseT1();
@@ -263,18 +252,7 @@ class _Med3State extends State<Med3> {
                                 final x = double.tryParse(value);
                                 setState(() {
                                   drugConcentrationT1 = x ?? 0;
-                                  totalDoseNeededMlT1 =
-                                      totalDoseNeededMgT1 / drugConcentrationT1;
-                                  if (totalDoseNeededMlT1.isNaN ||
-                                      totalDoseNeededMlT1.isInfinite) {
-                                    totalDoseNeededMlT1Text.text =
-                                        (0).toStringAsFixed(2) + "mL";
-                                  } else {
-                                    totalDoseNeededMlT1Text.text =
-                                        (totalDoseNeededMlT1)
-                                                .toStringAsFixed(2) +
-                                            "mL";
-                                  }
+                                  calcDosageNeededMlT1();
                                   calcDrugRequiredT1();
                                   calcVolumeToDispenseT1();
                                 });
@@ -321,18 +299,7 @@ class _Med3State extends State<Med3> {
                                 final x = double.tryParse(value);
                                 setState(() {
                                   dosesPerDayT1 = x ?? 0;
-                                  drugRequiredT1 =
-                                      totalDoseNeededMlT1 / dosesPerDayT1;
-                                  if (drugRequiredT1.isNaN ||
-                                      drugRequiredT1.isInfinite) {
-                                    drugRequiredT1Text.text =
-                                        (0).toStringAsFixed(2) + "mL/dose";
-                                  } else {
-                                    drugRequiredT1Text.text =
-                                        (drugRequiredT1).toStringAsFixed(2) +
-                                            "mL/dose";
-                                  } // handle null and String
-
+                                  calcDrugRequiredT1();
                                   calcVolumeToDispenseT1();
                                 });
                               }),
@@ -378,11 +345,7 @@ class _Med3State extends State<Med3> {
                                 final x = int.tryParse(value);
                                 setState(() {
                                   numDaysTreatmentT1 = x ?? 0;
-                                  volumeToDispenseT1 =
-                                      drugRequiredT1 * numDaysTreatmentT1;
-                                  volumeToDispenseT1Text.text =
-                                      (volumeToDispenseT1).toStringAsFixed(2) +
-                                          "mL"; // handle null and String
+                                  calcVolumeToDispenseT1();
                                 });
                               }),
                         ),
