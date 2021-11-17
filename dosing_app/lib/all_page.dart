@@ -46,9 +46,10 @@ class _AllPageState extends State<AllPage> {
               itemBuilder: (BuildContext context, int index) {
                 String title = widget.medications[index]['name'];
                 String description = widget.medications[index]['description'];
+                String imagePath = widget.medications[index]['imagePath'];
                 return Card(
                   child: ListTile(
-                    leading: FlutterLogo(size: 72.0),
+                    leading: Image.asset(imagePath, width: 100),
                     title: Text(title),
                     subtitle: Text(description),
                     isThreeLine: true,
