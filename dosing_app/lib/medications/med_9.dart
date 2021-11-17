@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
-class Med2 extends StatefulWidget {
-  Med2(
+class Med9 extends StatefulWidget {
+  Med9(
       {Key? key,
-      required this.index,
-      required this.medications,
-      required this.favMedications})
+        required this.index,
+        required this.medications,
+        required this.favMedications})
       : super(key: key);
-
   dynamic index;
   dynamic medications;
   dynamic favMedications;
 
   @override
-  _Med2State createState() => _Med2State();
+  _Med9State createState() => _Med9State();
 }
 
-class _Med2State extends State<Med2> {
+class _Med9State extends State<Med9> {
   @override
   Widget build(BuildContext context) {
     Map medication = widget.medications[widget.index];
@@ -24,7 +23,7 @@ class _Med2State extends State<Med2> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(medication['name']),
+        title: const Text("Isotretinoin"),
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -48,33 +47,23 @@ class _Med2State extends State<Med2> {
                   )))
         ],
       ),
-      backgroundColor: Colors.white, //page background color
-
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's surface area (m2)"),
-            dropDownList(
-              listTitle: "Drug concentration (mg/ml)",
-            ),
-            const formFieldContainer("Child's weight (kg)"),
+            formFieldContainer("Patient weight (kg)"),
+            formFieldContainer("Current dose per day (mg)"),
+            formFieldContainer("Duration of current dose (Days)"),
+            formFieldContainer("Prior dose per day (mg)"),
             //formFieldContainer("Drug concentration (mg/ml)"), //drop down  list
-
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
+            formFieldContainer("Duration of prior dose (days)"),
+            formFieldContainer("Prior dose per day (mg) 2"),
+            formFieldContainer("Duration of prior dose (days) 2"),
           ],
         ),
       ),
     );
   }
 }
-
-//Stateless widget to create the text form fields
-
 class formFieldContainer extends StatelessWidget {
   final String formTitle;
 
@@ -93,7 +82,7 @@ class formFieldContainer extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
               child: Text(
                 formTitle,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
@@ -105,14 +94,14 @@ class formFieldContainer extends StatelessWidget {
                 hintText: "Enter Value",
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Colors.purple.shade900, width: 3),
-                  borderRadius: const BorderRadius.all(
+                  BorderSide(color: Colors.purple.shade900, width: 3),
+                  borderRadius: BorderRadius.all(
                     Radius.circular(30),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue.shade400, width: 3),
-                  borderRadius: const BorderRadius.all(
+                  borderRadius: BorderRadius.all(
                     Radius.circular(50),
                   ),
                 ),
@@ -171,12 +160,12 @@ class _dropDownListState extends State<dropDownList> {
               child: DropdownButtonHideUnderline(
                 //hides the underline in the text
                 child: DropdownButton<String>(
-                  onChanged: (value) => setState(() => this.value = value),
                   value: value,
                   iconSize: 36,
                   icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                   items: items.map(buildMenuItem).toList(),
                   isExpanded: true,
+                  //onChanged: (value) => setState(() => this.value = value),
                 ),
               ),
             ),
@@ -187,10 +176,10 @@ class _dropDownListState extends State<dropDownList> {
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          item,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      );
+    value: item,
+    child: Text(
+      item,
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+    ),
+  );
 }

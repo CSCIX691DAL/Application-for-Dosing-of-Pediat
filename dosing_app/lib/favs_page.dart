@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'medications/med_1.dart';
 
 class FavouritesPage extends StatefulWidget {
   FavouritesPage(
@@ -26,7 +25,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   child: ListTile(
-                    leading: FlutterLogo(size: 72.0),
+                    leading: Image.asset(widget.medications[index]['imagePath'],
+                        width: 100),
                     title:
                         Text(widget.favMedications[index]['name'].toString()),
                     subtitle: Text(
