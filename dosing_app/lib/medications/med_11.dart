@@ -19,10 +19,15 @@ class Med11 extends StatefulWidget {
 }
 
 class _Med11State extends State<Med11> {
-  TextEditingController totalDoseNeededT1Text = TextEditingController();
+  TextEditingController dosageNeededT1Text = TextEditingController();
   TextEditingController numTabletsT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
   TextEditingController volumeToDispenseT1Text = TextEditingController();
+
+  TextEditingController dosageNeededMgT2Text = TextEditingController();
+  TextEditingController numTabletsT2Text = TextEditingController();
+  TextEditingController dosageNeededMlT2Text = TextEditingController();
+  TextEditingController volumeToDispenseT2Text = TextEditingController();
 
   double concentrationNeededT1 = 0;
   double childSurfaceAreaT1 = 0;
@@ -36,10 +41,17 @@ class _Med11State extends State<Med11> {
 
   List<String> drugTypeT1Items = ["Tablet", "Subcutaneous"];
   String drugTypeT1 = "Tablet";
-
-  List<int> drugConcentrationT2Items = [125, 250];
-  int drugConcentrationT2 = 125;
   bool showTabletT1 = true;
+
+  double concentrationNeededT2 = 0;
+  double childWeightT2 = 0;
+  double dosageNeededMgT2 = 0;
+  int numWeeksTreatmentT2 = 0;
+  double mgPerTabletT2 = 2.5;
+  int numTabletsT2 = 0;
+  double concentrationT2 = 0;
+  double dosageNeededMlT2 = 0;
+  double volumeToDispenseT2 = 0;
 
   List<String> drugTypeT2Items = ["Tablet", "Subcutaneous"];
   String drugTypeT2 = "Tablet"; // false would show subcutaneous options
@@ -60,20 +72,38 @@ class _Med11State extends State<Med11> {
     super.dispose();
   }
 
-  void resetValuesT1() {
+  void resetValues() {
+    // Tab 1 values
+    concentrationNeededT1 = 0;
     childSurfaceAreaT1 = 0;
     dosageNeededT1 = 0;
     numWeeksTreatmentT1 = 0;
-    totalDoseNeededT1Text.text = '';
+    numTabletsT1 = 0;
+    concentrationT1 = 0;
+    drugRequiredT1 = 0;
+    volumeToDispenseT1 = 0;
+    dosageNeededT1Text.text = '';
     numTabletsT1Text.text = '';
     drugRequiredT1Text.text = '';
     volumeToDispenseT1Text.text = '';
+
+    // Tab 2 values
+    concentrationNeededT2 = 0;
+    childWeightT2 = 0;
+    dosageNeededMgT2 = 0;
+    numWeeksTreatmentT2 = 0;
+    concentrationT2 = 0;
+    dosageNeededMlT2 = 0;
+    volumeToDispenseT2 = 0;
+    dosageNeededMgT2Text.text = '';
+    numTabletsT2Text.text = '';
+    dosageNeededMlT2Text.text = '';
+    volumeToDispenseT2Text.text = '';
   }
 
-  void calcDosageNeededT1() {
+  void calcDosageNeededMgT1() {
     dosageNeededT1 = concentrationNeededT1 * childSurfaceAreaT1;
-    totalDoseNeededT1Text.text =
-        (dosageNeededT1).toStringAsFixed(2) + "mg/dose";
+    dosageNeededT1Text.text = (dosageNeededT1).toStringAsFixed(2) + "mg/dose";
   }
 
   void calcNumTabletsT1() {
@@ -98,6 +128,37 @@ class _Med11State extends State<Med11> {
     } else {
       volumeToDispenseT1Text.text =
           (volumeToDispenseT1).toStringAsFixed(2) + "mL";
+    }
+  }
+
+  void calcDosageNeededMgT2() {
+    dosageNeededMgT2 = concentrationNeededT2 * childWeightT2;
+    dosageNeededMgT2Text.text =
+        (dosageNeededMgT2).toStringAsFixed(2) + "mg/dose";
+  }
+
+  void calcNumTabletsT2() {
+    numTabletsT2 =
+        (dosageNeededMgT2 * numWeeksTreatmentT2 / mgPerTabletT2).ceil();
+    numTabletsT2Text.text = (numTabletsT2).toString() + " tablets";
+  }
+
+  void calcDosageNeededMlT2() {
+    dosageNeededMlT2 = dosageNeededMgT2 / concentrationT2;
+    if (dosageNeededMlT2.isNaN || dosageNeededMlT2.isInfinite) {
+      dosageNeededMlT2Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      dosageNeededMlT2Text.text = (dosageNeededMlT2).toStringAsFixed(2) + "mL";
+    }
+  }
+
+  void calcVolumeToDispenseT2() {
+    volumeToDispenseT2 = dosageNeededMlT2 * numWeeksTreatmentT2;
+    if (volumeToDispenseT2.isNaN || volumeToDispenseT2.isInfinite) {
+      volumeToDispenseT2Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      volumeToDispenseT2Text.text =
+          (volumeToDispenseT2).toStringAsFixed(2) + "mL";
     }
   }
 
@@ -178,7 +239,7 @@ class _Med11State extends State<Med11> {
                                       } else {
                                         showTabletT1 = false;
                                       }
-                                      resetValuesT1();
+                                      resetValues();
                                     });
                                   },
                                   items: drugTypeT1Items.map((value) {
@@ -215,7 +276,7 @@ class _Med11State extends State<Med11> {
                                         final x = double.tryParse(value);
                                         setState(() {
                                           concentrationNeededT1 = x ?? 0;
-                                          calcDosageNeededT1();
+                                          calcDosageNeededMgT1();
                                           calcNumTabletsT1();
                                         });
                                       }),
@@ -238,7 +299,7 @@ class _Med11State extends State<Med11> {
                                         final x = double.tryParse(value);
                                         setState(() {
                                           childSurfaceAreaT1 = x ?? 0;
-                                          calcDosageNeededT1();
+                                          calcDosageNeededMgT1();
                                           calcNumTabletsT1();
                                         });
                                       }),
@@ -249,7 +310,7 @@ class _Med11State extends State<Med11> {
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20, top: 30, bottom: 0),
                                   child: TextField(
-                                    controller: totalDoseNeededT1Text,
+                                    controller: dosageNeededT1Text,
                                     readOnly: true,
                                     decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
@@ -358,8 +419,8 @@ class _Med11State extends State<Med11> {
                                       onChanged: (value) {
                                         final x = double.tryParse(value);
                                         setState(() {
-                                          concentrationNeededT1 = x ?? 0;
-                                          calcDosageNeededT1();
+                                          concentrationNeededT2 = x ?? 0;
+                                          calcDosageNeededMlT2();
                                           calcDrugRequiredT1();
                                           calcVolumeToDispenseT1();
                                         });
@@ -383,7 +444,7 @@ class _Med11State extends State<Med11> {
                                         final x = double.tryParse(value);
                                         setState(() {
                                           childSurfaceAreaT1 = x ?? 0;
-                                          calcDosageNeededT1();
+                                          calcDosageNeededMgT1();
                                           calcDrugRequiredT1();
                                           calcVolumeToDispenseT1();
                                         });
@@ -395,7 +456,7 @@ class _Med11State extends State<Med11> {
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20, top: 30, bottom: 0),
                                   child: TextField(
-                                    controller: totalDoseNeededT1Text,
+                                    controller: dosageNeededT1Text,
                                     readOnly: true,
                                     decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
@@ -534,15 +595,16 @@ class _Med11State extends State<Med11> {
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                   isExpanded: true,
-                                  value: drugTypeT1,
+                                  value: drugTypeT2,
                                   onChanged: (newValue) {
-                                    drugTypeT1 = newValue!;
+                                    drugTypeT2 = newValue!;
                                     setState(() {
                                       if (drugTypeT2 == "Tablet") {
                                         showTabletT2 = true;
                                       } else {
                                         showTabletT2 = false;
                                       }
+                                      resetValues();
                                     });
                                   },
                                   items: drugTypeT2Items.map((value) {
@@ -554,6 +616,319 @@ class _Med11State extends State<Med11> {
                                 ),
                               ),
                             )),
+
+                        // **TABLET**
+                        Visibility(
+                            visible: (showTabletT2),
+                            child: Column(children: [
+                              // Concentration needed
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText:
+                                          "Concentration Needed (mg/kg/week)",
+                                      hintText:
+                                          "Concentration Needed (mg/kg/week)",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = double.tryParse(value);
+                                      setState(() {
+                                        concentrationNeededT2 = x ?? 0;
+                                        calcDosageNeededMgT2();
+                                        calcNumTabletsT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Child's surface area input field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 20, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Child's Weight (kg)",
+                                      hintText: "Child's Weight (kg)",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = double.tryParse(value);
+                                      setState(() {
+                                        childWeightT2 = x ?? 0;
+                                        calcDosageNeededMgT2();
+                                        calcNumTabletsT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Total dosage needed output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                  controller: dosageNeededMgT2Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText:
+                                          "Total Dosage Needed (mg/dose)",
+                                      hintText: "0mg/dose",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+                              // Num weeks of treatment
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: false),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Number of Weeks of Treatment",
+                                      hintText: "Number of Weeks of Treatment",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = int.tryParse(value);
+                                      setState(() {
+                                        numWeeksTreatmentT2 = x ?? 0;
+                                        calcNumTabletsT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Num mg per tablet
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextFormField(
+                                  initialValue:
+                                      mgPerTabletT2.toStringAsFixed(1),
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: "Number mg's per Tablet",
+                                    hintText: "Number mg's per Tablet",
+                                  ),
+                                ),
+                              ),
+
+                              // Num tablets output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                  controller: numTabletsT2Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText: "Total Number of Tablets",
+                                      hintText: "0 tablets",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+                            ])),
+
+                        // **SUBCUTANEOUS**
+                        Visibility(
+                            visible: (!showTabletT2),
+                            child: Column(children: [
+                              // Concentration needed
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText:
+                                          "Concentration Needed (mg/kg/week)",
+                                      hintText:
+                                          "Concentration Needed (mg/kg/week)",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = double.tryParse(value);
+                                      setState(() {
+                                        concentrationNeededT2 = x ?? 0;
+                                        calcDosageNeededMgT2();
+                                        calcDosageNeededMlT2();
+                                        calcVolumeToDispenseT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Child's weight input field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 20, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Child's Weight (kg)",
+                                      hintText: "Child's Weight (kg)",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = double.tryParse(value);
+                                      setState(() {
+                                        childWeightT2 = x ?? 0;
+                                        calcDosageNeededMgT2();
+                                        calcDosageNeededMlT2();
+                                        calcVolumeToDispenseT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Total dosage needed (mg) output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                  controller: dosageNeededMgT2Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText:
+                                          "Total Drug Dose Needed (mg/dose)",
+                                      hintText: "0mg/dose",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+
+                              // Concentration input field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 20, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Concentration (mg/mL)",
+                                      hintText: "Concentration (mg/mL)",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = double.tryParse(value);
+                                      setState(() {
+                                        concentrationT2 = x ?? 0;
+                                        calcDosageNeededMlT2();
+                                        calcVolumeToDispenseT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Total dosage needed (ml) output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                  controller: dosageNeededMlT2Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText: "Total Drug Dose Needed (mL)",
+                                      hintText: "0mL",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+
+                              // Number of weeks of treatment input field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 20, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: false),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Number of Weeks of Treatment",
+                                      hintText: "Number of Weeks of Treatment",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = int.tryParse(value);
+                                      setState(() {
+                                        numWeeksTreatmentT2 = x ?? 0;
+                                        calcVolumeToDispenseT2();
+                                      });
+                                    }),
+                              ),
+
+                              // Total volume to dispense output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 60),
+                                child: TextField(
+                                  controller: volumeToDispenseT2Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText:
+                                          "Total Volume to Dispense (mL)",
+                                      hintText: "0mL",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+                            ]))
                       ],
                     )),
                   ],
