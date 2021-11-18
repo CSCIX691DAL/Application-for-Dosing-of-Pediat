@@ -17,7 +17,7 @@ class Med6 extends StatelessWidget {
         child: Column(
           children: <Widget>[
             formFieldContainer("Child's Weight (kg)"),
-            formFieldContainer("Child's su rface area (m2)"),
+            formFieldContainer("Child's surface area (m2)"),
             formFieldContainer("Child's weight (kg)"),
             //formFieldContainer("Drug concentration (mg/ml)"), //drop down  list
             dropDownList(
