@@ -19,7 +19,6 @@ class Med3 extends StatefulWidget {
 }
 
 class _Med3State extends State<Med3> {
-  TextEditingController concentrationNeededT1Text = TextEditingController();
   TextEditingController totalDoseNeededMgT1Text = TextEditingController();
   TextEditingController totalDoseNeededMlT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
