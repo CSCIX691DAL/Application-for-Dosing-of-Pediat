@@ -226,7 +226,7 @@ class _Med11State extends State<Med11> {
                                     borderSide: BorderSide(
                                         color: Colors.purple, width: 2.0),
                                   ),
-                                  labelText: "Drug Type"),
+                                  labelText: "Drug Delivery Method"),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                   isExpanded: true,
@@ -591,7 +591,7 @@ class _Med11State extends State<Med11> {
                                     borderSide: BorderSide(
                                         color: Colors.purple, width: 2.0),
                                   ),
-                                  labelText: "Drug Type"),
+                                  labelText: "Drug Delivery Method"),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                   isExpanded: true,
