@@ -1,7 +1,13 @@
+import 'package:dosing_app/medications/med_5.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'medications/med_1.dart';
-import 'medications/Hydroxyzine_1.dart';
+import 'medications/med_2.dart';
+import 'medications/med_3.dart';
+import 'medications/med_5.dart';
+import 'medications/med_7.dart';
+import 'medications/med_8.dart';
+import 'medications/med_9.dart';
 
 void main() {
   // myApp was const
@@ -21,32 +27,32 @@ class MyApp extends StatelessWidget {
     {
       'name': 'Acyclovir',
       'description': 'Calculate the dosage for Acyclovir',
-      'route': '/med1',
+      'route': '/med2',
     },
     {
       'name': 'Amoxicillin',
       'description': 'Calculate the dosage for Amoxicillin',
-      'route': '/med1',
+      'route': '/med3',
     },
     {
       'name': 'Azathioprine',
       'description': 'Calculate the dosage for Azathioprine',
-      'route': '/med1',
+      'route': '/med4',
     },
     {
       'name': 'Cephalexin',
       'description': 'Calculate the dosage for Cephalexin',
-      'route': '/med1',
+      'route': '/med5',
     },
     {
       'name': 'Cyclosporin',
       'description': 'Calculate the dosage for Cyclosporin',
-      'route': '/med1',
+      'route': '/med6',
     },
     {
       'name': 'Hemangiol/Propranolol',
       'description': 'Calculate the dosage for Hemangiol/Propranolol',
-      'route': '/med1',
+      'route': '/med7',
     },
     {
       'name': 'Hydroxyzine',
@@ -56,47 +62,47 @@ class MyApp extends StatelessWidget {
     {
       'name': 'Isotretinoin',
       'description': 'Calculate the dosage for Isotretinoin',
-      'route': '/med1',
+      'route': '/med9',
     },
     {
       'name': 'Itraconazole',
       'description': 'Calculate the dosage for Itraconazole',
-      'route': '/med1',
+      'route': '/med10',
     },
     {
       'name': 'Methotrexate',
       'description': 'Calculate the dosage for Methotrexate',
-      'route': '/med1',
+      'route': '/med11',
     },
     {
       'name': 'Mycophenalate Mofetil',
       'description': 'Calculate the dosage for Mycophenalate Mofetil',
-      'route': '/med1',
+      'route': '/med12',
     },
     {
       'name': 'Mycophenalate Sodium',
       'description': 'Calculate the dosage for Mycophenalate Sodium',
-      'route': '/med1',
+      'route': '/med13',
     },
     {
       'name': 'Prednisolone',
       'description': 'Calculate the dosage for Prednisolone',
-      'route': '/med1',
+      'route': '/med14',
     },
     {
       'name': 'Prednisone',
       'description': 'Calculate the dosage for Prednisone',
-      'route': '/med1',
+      'route': '/med15',
     },
     {
       'name': 'Terbinafine',
       'description': 'Calculate the dosage for Terbinafine',
-      'route': '/med1',
+      'route': '/med16',
     },
     {
       'name': 'Valacyclovir',
       'description': 'Calculate the dosage for Valacyclovir',
-      'route': '/med1',
+      'route': '/med17',
     },
   ];
 
@@ -120,13 +126,34 @@ class MyApp extends StatelessWidget {
               index: 0,
               medications: medications,
               favMedications: favMedications),
-          '/med8': (context) => Hydroxyzine1(
-              index: 0,
+          '/med2': (context) => Med2(
+              index: 1,
               medications: medications,
-              favMedications: favMedications)
-        }
+              favMedications: favMedications),
+          '/med3': (context) => Med3(
+              index: 2,
+              medications: medications,
+              favMedications: favMedications),
+          '/med5': (context) => Med5(
+              index: 4,
+              medications: medications,
+              favMedications: favMedications),
+          '/med9': (context) => Med9(
+              index: 8,
+              medications: medications,
+              favMedications: favMedications),
+          '/med8': (context) => Med8(
+              index: 7,
+              medications: medications,
+              favMedications: favMedications),
+
+        '/med7': (context) => Med7(
+        index: 6,
+        medications: medications,
+        favMedications: favMedications)
+
+  }
         // home: const HomePage(),
         );
   }
 }
-
