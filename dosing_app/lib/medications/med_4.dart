@@ -125,7 +125,7 @@ class _Med4State extends State<Med4> {
             length: 2,
             child: Scaffold(
                 appBar: AppBar(
-                  title: Text("Azathioprine"),
+                  title: Text(medication['name']),
                   actions: <Widget>[
                     Padding(
                         padding: const EdgeInsets.only(right: 20.0),

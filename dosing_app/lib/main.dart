@@ -152,7 +152,7 @@ class MyApp extends StatelessWidget {
               medications: medications,
               favMedications: favMedications),
           '/med4': (context) => Med4(
-              index: 2,
+              index: 3,
               medications: medications,
               favMedications: favMedications),
           '/med5': (context) => Med5(
