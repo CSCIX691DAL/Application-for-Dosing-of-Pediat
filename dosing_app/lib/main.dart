@@ -138,19 +138,21 @@ class MyApp extends StatelessWidget {
               index: 4,
               medications: medications,
               favMedications: favMedications),
-          '/med9': (context) => Med9(
-              index: 8,
+          '/med7': (context) => Med7(
+              index: 6,
               medications: medications,
               favMedications: favMedications),
           '/med8': (context) => Med8(
               index: 7,
               medications: medications,
               favMedications: favMedications),
+          '/med9': (context) => Med9(
+              index: 8,
+              medications: medications,
+              favMedications: favMedications),
 
-        '/med7': (context) => Med7(
-        index: 6,
-        medications: medications,
-        favMedications: favMedications)
+
+
 
   }
         // home: const HomePage(),
