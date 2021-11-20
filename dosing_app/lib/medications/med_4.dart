@@ -24,8 +24,11 @@ class _Med4State extends State<Med4> {
   TextEditingController mgTotalInjText = TextEditingController();
   TextEditingController mLNeededInjText = TextEditingController();
 
-  TextEditingController drugRequiredT2Text = TextEditingController();
-  TextEditingController volumeToDispenseT2Text = TextEditingController();
+  TextEditingController totalDoseOralText = TextEditingController();
+  TextEditingController mgPerTreatmentOralText = TextEditingController();
+  TextEditingController mgTotalOralText = TextEditingController();
+  TextEditingController tabletsNeededOralText = TextEditingController();
+
 
   double concentrationNeededInj = 0;
   double childWeightInj = 0;
@@ -37,14 +40,15 @@ class _Med4State extends State<Med4> {
   final int mgPermLInj = 10;
   double mLNeededInj = 0;
 
-  double concentrationNeededT2 = 0;
-  double drugRequiredT2 = 0;
-  double dosesPerDayT2 = 0;
-  int numDaysTreatmentT2 = 0;
-  double volumeToDispenseT2 = 0;
-
-  List<int> drugConcentrationT2Items = [125, 250];
-  int drugConcentrationT2 = 125;
+  double concentrationNeededOral = 0;
+  double childWeightOral = 0;
+  double totalDoseOral = 0;
+  int numDosesOral = 0;
+  double mgPerTreatmentOral = 0;
+  int treatmentDaysOral = 0;
+  double mgTotalOral = 0;
+  final int mgPerTabletOral = 50;
+  double tabletsNeededOral = 0;
 
   late FocusNode myFocusNode;
 
@@ -64,7 +68,7 @@ class _Med4State extends State<Med4> {
   void calcDosageNeededInj() {
     totalDoseInj = concentrationNeededInj * childWeightInj;
     totalDoseInjText.text =
-        (totalDoseInj).toStringAsFixed(2) + "mg";
+        (totalDoseInj).toStringAsFixed(2) + " mg";
   }
 
   void calcMgPerTreamentInj() {
@@ -73,13 +77,13 @@ class _Med4State extends State<Med4> {
       mgPerTreatmentInjText.text = "0 mg/dose";
     } else {
       mgPerTreatmentInjText.text =
-          (mgPerTreatmentInj).toStringAsFixed(2) + "mg/dose";
+          (mgPerTreatmentInj).toStringAsFixed(2) + " mg/dose";
     }
   }
 
   void calcMgTotalInj() {
     mgTotalInj = totalDoseInj * treatmentDaysInj;
-    mgTotalInjText.text = (mgTotalInj).toStringAsFixed(2) + "mg";
+    mgTotalInjText.text = (mgTotalInj).toStringAsFixed(2) + " mg";
   }
 
   void calcMlTotalInj() {
@@ -88,24 +92,39 @@ class _Med4State extends State<Med4> {
       mLNeededInjText.text = "0 mL";
     } else {
       mLNeededInjText.text =
-      (mLNeededInj).toStringAsFixed(2) + "mL";
+      (mLNeededInj).toStringAsFixed(2) + " mL";
     }
   }
 
-  void calcDrugRequiredT2() {
-    drugRequiredT2 = concentrationNeededT2 / (drugConcentrationT2 / 5);
+  void calcTotalDoseOral() {
+    totalDoseOral = concentrationNeededOral * childWeightOral;
+    totalDoseOralText.text = (totalDoseOral).toStringAsFixed(2) + " mg";
 
-    if (drugRequiredT2.isNaN || drugRequiredT2.isInfinite) {
-      drugRequiredT2Text.text = (0).toStringAsFixed(2) + "mL/dose";
+  }
+
+  void calcMgPerTreatmentOral() {
+    mgPerTreatmentOral = totalDoseOral / numDosesOral;
+    if (mgPerTreatmentOral.isNaN || mgPerTreatmentOral.isInfinite) {
+      mgPerTreatmentOralText.text = "0 mg";
     } else {
-      drugRequiredT2Text.text = (drugRequiredT2).toStringAsFixed(2) + "mL/dose";
+      mgPerTreatmentOralText.text =
+          (mgPerTreatmentOral).toStringAsFixed(2) + " mg";
     }
   }
 
-  void calcVolumeToDispenseT2() {
-    volumeToDispenseT2 = dosesPerDayT2 * numDaysTreatmentT2;
-    volumeToDispenseT2Text.text =
-        (volumeToDispenseT2).toStringAsFixed(2) + "mL";
+  void calcMgTotalOral() {
+    mgTotalOral = treatmentDaysOral * totalDoseOral;
+    mgTotalOralText.text = (mgTotalOral).toStringAsFixed(2) + " mg";
+  }
+
+  void calcTabletsOral() {
+    tabletsNeededOral = mgTotalOral / mgPerTabletOral;
+    if(tabletsNeededOral.isNaN || tabletsNeededOral.isInfinite) {
+      tabletsNeededOralText.text = "0 Tablets";
+    } else {
+      tabletsNeededOralText.text =
+          (tabletsNeededOral).toStringAsFixed(1) + " Tablets";
+    }
   }
 
   @override
@@ -276,10 +295,7 @@ class _Med4State extends State<Med4> {
                                                 .toStringAsFixed(2) +
                                                 "mg";
                                       }
-                                      calcDosageNeededInj();
                                       calcMgPerTreamentInj();
-                                      calcMgTotalInj();
-                                      calcMlTotalInj();
                                     });
                                   }),
                             ),
@@ -386,7 +402,7 @@ class _Med4State extends State<Med4> {
                           ],
                         )),
 
-                    // *** TAB 2 ***
+                    // *** ORAL TAB ***
                     SingleChildScrollView(
                         child: Column(
                           children: [
@@ -408,77 +424,22 @@ class _Med4State extends State<Med4> {
                                       borderSide: BorderSide(
                                           color: Colors.indigo, width: 2.0),
                                     ),
-                                    labelText: "Concentration Needed (mg/dose)",
-                                    hintText: "0mg/dose",
+                                    labelText: "Concentration Needed (mg/kg/day)",
+                                    hintText: "0 mg/kg/day",
                                   ),
                                   onChanged: (value) {
                                     final x = double.tryParse(value);
                                     setState(() {
-                                      concentrationNeededT2 = x ?? 0;
-                                      calcDrugRequiredT2();
-                                      calcVolumeToDispenseT2();
+                                      concentrationNeededOral = x ?? 0;
+                                      calcTotalDoseOral();
+                                      calcMgPerTreatmentOral();
+                                      calcMgTotalOral();
+                                      calcTabletsOral();
                                     });
                                   }),
                             ),
 
-                            //Drug concentration dropdown
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 20, top: 30, bottom: 0),
-                                child: InputDecorator(
-                                  decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.purple, width: 2.0),
-                                      ),
-                                      labelText: "Drug Concentration mg/mL"),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<int>(
-                                      // hint: Text('Please choose a location'),
-                                      isExpanded: true,
-                                      value: drugConcentrationT2,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          drugConcentrationT2 = newValue!;
-                                          calcDrugRequiredT2();
-                                          calcVolumeToDispenseT2();
-                                        });
-                                      },
-                                      items: drugConcentrationT2Items.map((value) {
-                                        return DropdownMenuItem(
-                                          child: Text(value.toString() + "mg/5ml"),
-                                          value: value,
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                )),
-
-                            // Drug required output
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: drugRequiredT2Text,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Drug Required (mL/dose)",
-                                    hintText: "0mL/dose",
-                                    labelStyle: TextStyle(color: Colors.purple)),
-                              ),
-                            ),
-
-                            // Number of doses per day
+                            //Child's Weight Input
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 0),
@@ -496,19 +457,45 @@ class _Med4State extends State<Med4> {
                                       borderSide: BorderSide(
                                           color: Colors.indigo, width: 2.0),
                                     ),
-                                    labelText: "Number of doses per day",
-                                    hintText: "0 doses per day",
+                                    labelText: "Child's Weight (kg)",
+                                    hintText: "0 kg",
                                   ),
                                   onChanged: (value) {
                                     final x = double.tryParse(value);
                                     setState(() {
-                                      dosesPerDayT2 = x ?? 0;
-                                      calcVolumeToDispenseT2();
+                                      childWeightOral = x ?? 0;
+                                      calcTotalDoseOral();
+                                      calcMgPerTreatmentOral();
+                                      calcMgTotalOral();
+                                      calcTabletsOral();
                                     });
                                   }),
                             ),
 
-                            // Number of days of treatment
+                            // Total Dose Output
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 30, bottom: 0),
+                              child: TextField(
+                                controller: totalDoseOralText,
+                                readOnly: true,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.purple, width: 2.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.purple, width: 2.0),
+                                    ),
+                                    labelText: "Total Dose Needed (mg)",
+                                    hintText: "0 mg",
+                                    labelStyle: TextStyle(color: Colors.purple)),
+                              ),
+                            ),
+
+                            // Number of doses per day
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 0),
@@ -526,24 +513,24 @@ class _Med4State extends State<Med4> {
                                       borderSide: BorderSide(
                                           color: Colors.indigo, width: 2.0),
                                     ),
-                                    labelText: "Number of Days of Treatment",
-                                    hintText: "0 days",
+                                    labelText: "Number of doses per day",
+                                    hintText: "0 doses per day",
                                   ),
                                   onChanged: (value) {
                                     final x = int.tryParse(value);
                                     setState(() {
-                                      numDaysTreatmentT2 = x ?? 0;
-                                      calcVolumeToDispenseT2();
+                                      numDosesOral = x ?? 0;
+                                      calcMgPerTreatmentOral();
                                     });
                                   }),
                             ),
 
-                            // Volume to dispense
+                            // Mg per Treatment Output
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 0),
                               child: TextField(
-                                controller: volumeToDispenseT2Text,
+                                controller: mgPerTreatmentOralText,
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
@@ -555,8 +542,85 @@ class _Med4State extends State<Med4> {
                                       borderSide: BorderSide(
                                           color: Colors.purple, width: 2.0),
                                     ),
-                                    labelText: "Total Volume to Dispense (mL)",
-                                    hintText: "0mL",
+                                    labelText: "Dose per Treatment (mg/treatment)",
+                                    hintText: "0 mg/treatment",
+                                    labelStyle: TextStyle(color: Colors.purple)),
+                              ),
+                            ),
+
+                            // Treatment Days
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 30, bottom: 0),
+                              child: TextField(
+                                  keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: false),
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.grey, width: 1.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.indigo, width: 2.0),
+                                    ),
+                                    labelText: "Number of days of treatment",
+                                    hintText: "0 days",
+                                  ),
+                                  onChanged: (value) {
+                                    final x = int.tryParse(value);
+                                    setState(() {
+                                      treatmentDaysOral = x ?? 0;
+                                      calcMgTotalOral();
+                                      calcTabletsOral();
+                                    });
+                                  }),
+                            ),
+
+                            // Mg Total Output
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 30, bottom: 0),
+                              child: TextField(
+                                controller: mgTotalOralText,
+                                readOnly: true,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.purple, width: 2.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.purple, width: 2.0),
+                                    ),
+                                    labelText: "Mg Total",
+                                    hintText: "0 mg",
+                                    labelStyle: TextStyle(color: Colors.purple)),
+                              ),
+                            ),
+
+                            // Tablets total output
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 30, bottom: 0),
+                              child: TextField(
+                                controller: tabletsNeededOralText,
+                                readOnly: true,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.purple, width: 2.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.purple, width: 2.0),
+                                    ),
+                                    labelText: "Tablets Needed Total",
+                                    hintText: "0 tablets",
                                     labelStyle: TextStyle(color: Colors.purple)),
                               ),
                             ),

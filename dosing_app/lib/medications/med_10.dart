@@ -50,19 +50,7 @@ class _Med10State extends State<Med10> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's surface area (m2)"),
-            dropDownList(
-              listTitle: "Drug concentration (mg/ml)",
-            ),
-            const formFieldContainer("Child's weight (kg)"),
-            //formFieldContainer("Drug concentration (mg/ml)"), //drop down  list
 
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
-            const formFieldContainer("Child's Weight (kg)"),
           ],
         ),
       ),
