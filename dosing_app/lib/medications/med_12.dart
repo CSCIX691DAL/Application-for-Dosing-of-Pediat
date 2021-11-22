@@ -19,7 +19,7 @@ class Med12 extends StatefulWidget {
 }
 
 class _Med12State extends State<Med12> {
-  // suspension
+  // tab 1 output fields
   TextEditingController dosageNeededT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
   TextEditingController mlRequiredT1Text = TextEditingController();
@@ -27,6 +27,7 @@ class _Med12State extends State<Med12> {
   TextEditingController mgRequiredT1Text = TextEditingController();
   TextEditingController capsulesToDispenseT1Text = TextEditingController();
 
+  // tab 1 variables
   double concentrationNeededMgMDoseT1 = 0;
   double childSurfaceAreaT1 = 0;
   double dosageNeededT1 = 0;
@@ -38,9 +39,6 @@ class _Med12State extends State<Med12> {
   double volumeToDispenseT1 = 0;
   double mgRequiredT1 = 0;
   int capsulesToDispenseT1 = 0;
-
-  int dosesPerDay = 0;
-
   List<String> methodsOfAdmin = [
     "Suspension",
     "Capsule",
@@ -54,6 +52,22 @@ class _Med12State extends State<Med12> {
   bool showIntravenousT1 = false;
   String dispenseLabelTextT1 = '';
   String dispenseHintTextT1 = '';
+
+  // tab 2 output fields
+  TextEditingController drugRequiredMgT2Text = TextEditingController();
+  TextEditingController drugRequiredMlT2Text = TextEditingController();
+  TextEditingController unitPerDoseText = TextEditingController();
+  TextEditingController volumeToDispenseT2Text = TextEditingController();
+
+  // tab 2 variables
+  double bodySurfaceAreaT2 = 0;
+  int drugRequiredMgT2 = 0;
+  double drugRequiredMlT2 = 0;
+  int unitPeDoseT2 = 0;
+  int dosesPerDayT2 = 0;
+  int numDaysTreatmentT2 = 0;
+  double volumeToDispenseT2 = 0;
+  int numDosesPerDayT2 = 2;
 
   String methodOfAdminT2 = "Suspension";
   bool showSuspensionT2 = true;
@@ -201,32 +215,35 @@ class _Med12State extends State<Med12> {
 
   // toggling different forms based on dropdown entry for tab 2
   void toggleSuspensionT2() {
-    showSuspensionT1 = true;
-    showCapsuleT1 = false;
-    showTabletT1 = false;
-    showIntravenousT1 = false;
-    resetValuesT1();
+    showSuspensionT2 = true;
+    showCapsuleT2 = false;
+    showTabletT2 = false;
+    showIntravenousT2 = false;
+    resetValuesT2();
   }
 
   void toggleCapsuleT2() {
-    showSuspensionT1 = false;
-    showCapsuleT1 = true;
-    showTabletT1 = false;
-    showIntravenousT1 = false;
+    showSuspensionT2 = false;
+    showCapsuleT2 = true;
+    showTabletT2 = false;
+    showIntravenousT2 = false;
+    resetValuesT2();
   }
 
   void toggleTabletT2() {
-    showSuspensionT1 = false;
-    showCapsuleT1 = false;
-    showTabletT1 = true;
-    showIntravenousT1 = false;
+    showSuspensionT2 = false;
+    showCapsuleT2 = false;
+    showTabletT2 = true;
+    showIntravenousT2 = false;
+    resetValuesT2();
   }
 
   void toggleIntravenousT2() {
-    showSuspensionT1 = false;
-    showCapsuleT1 = false;
-    showTabletT1 = false;
-    showIntravenousT1 = true;
+    showSuspensionT2 = false;
+    showCapsuleT2 = false;
+    showTabletT2 = false;
+    showIntravenousT2 = true;
+    resetValuesT2();
   }
 
   void handleDrugDeliveryDropDownT2() {
@@ -239,12 +256,56 @@ class _Med12State extends State<Med12> {
     } else if (methodOfAdminT2 == "Intravenous") {
       toggleIntravenousT1();
     }
-    resetValuesT2();
   }
 
-  void resetValuesT2() {}
+  void resetValuesT2() {
+    bodySurfaceAreaT2 = 0;
+    drugRequiredMgT2 = 0;
+    drugRequiredMlT2 = 0;
+    unitPeDoseT2 = 0;
+    dosesPerDayT2 = 0;
+    numDaysTreatmentT2 = 0;
+    volumeToDispenseT2 = 0;
+
+    drugRequiredMgT2Text.text = '';
+    drugRequiredMlT2Text.text = '';
+    unitPerDoseText.text = '';
+    volumeToDispenseT2Text.text = '';
+  }
 
   // dose calculation functions for tab 2
+
+  void calcDrugRequiredMgT2() {
+    if (bodySurfaceAreaT2 >= 1.25 && bodySurfaceAreaT2 < 1.5) {
+      drugRequiredMgT2 = 750;
+    } else if (bodySurfaceAreaT2 >= 1.5) {
+      drugRequiredMgT2 = 1000;
+    } else {
+      drugRequiredMgT2 = 0;
+    }
+    drugRequiredMgT2Text.text = drugRequiredMgT2.toString() + 'mg/dose';
+  }
+
+  void calcDrugRequiredMlT2() {
+    drugRequiredMlT2 = drugRequiredMgT2 / 200;
+    if (drugRequiredMlT2.isNaN || drugRequiredMlT2.isInfinite) {
+      drugRequiredMlT2Text.text = (0).toStringAsFixed(2) + "mL/dose";
+    } else {
+      drugRequiredMlT2Text.text =
+          (drugRequiredMlT2).toStringAsFixed(2) + "mL/dose";
+    }
+  }
+
+  void calcVolumeToDispenseT2() {
+    volumeToDispenseT2 =
+        drugRequiredMlT2 * drugRequiredMgT2 * numDaysTreatmentT2;
+    if (volumeToDispenseT2.isNaN || volumeToDispenseT2.isInfinite) {
+      volumeToDispenseT2Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      volumeToDispenseT2Text.text =
+          (volumeToDispenseT2).toStringAsFixed(2) + "mL";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -543,7 +604,7 @@ class _Med12State extends State<Med12> {
                               ),
                             ])),
 
-                        // **Capsule or Tablet of Intravenous**
+                        // **Capsule or Tablet or Intravenous**
                         Visibility(
                             visible: (showCapsuleT1 ||
                                 showTabletT1 ||
@@ -732,6 +793,117 @@ class _Med12State extends State<Med12> {
                             ),
                           ),
                         )),
+                    // **SUSPENSION**
+                    Visibility(
+                        visible: (showSuspensionT2),
+                        child: Column(children: [
+                          // Body surface area input field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20, bottom: 0),
+                            child: TextField(
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Body Surface Area (m²)",
+                                  hintText: "Body Surface Area (m²)",
+                                ),
+                                onChanged: (value) {
+                                  final x = double.tryParse(value);
+                                  setState(() {
+                                    bodySurfaceAreaT2 = x ?? 0;
+                                    calcDrugRequiredMgT2();
+                                    calcDrugRequiredMlT2();
+                                    calcVolumeToDispenseT2();
+                                  });
+                                }),
+                          ),
+
+                          // drug required mg output field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextField(
+                              controller: drugRequiredMgT2Text,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Drug Required (mg/dose)",
+                                  hintText: "0mg/dose",
+                                  labelStyle: TextStyle(color: Colors.purple)),
+                            ),
+                          ),
+
+                          // Num doses per day
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextFormField(
+                              initialValue: numDosesPerDayT2.toString(),
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Number of Doses per Day",
+                                hintText: "Number of Doses per Day",
+                              ),
+                            ),
+                          ),
+
+                          // Number of days of treatment input field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20, bottom: 0),
+                            child: TextField(
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Number of Days of Treatment",
+                                  hintText: "Number of Days of Treatment",
+                                ),
+                                onChanged: (value) {
+                                  final x = int.tryParse(value);
+                                  setState(() {
+                                    numDaysTreatmentT2 = x ?? 0;
+                                    calcVolumeToDispenseT2();
+                                  });
+                                }),
+                          ),
+
+                          // Total volume to dispense output field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextField(
+                              controller: volumeToDispenseT2Text,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Total Volume to Dispense (mL)",
+                                  hintText: "0mL",
+                                  labelStyle: TextStyle(color: Colors.purple)),
+                            ),
+                          ),
+                        ]))
                   ]))
                 ]))));
   }
