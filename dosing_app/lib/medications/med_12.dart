@@ -22,6 +22,7 @@ class _Med12State extends State<Med12> {
   TextEditingController dosageNeededT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
   TextEditingController mlRequiredT1Text = TextEditingController();
+  TextEditingController volumeToDispenseT1Text = TextEditingController();
 
   double concentrationNeededMgMDoseT1 = 0;
   double childSurfaceAreaT1 = 0;
@@ -30,6 +31,8 @@ class _Med12State extends State<Med12> {
   List<int> concentrationsT1 = [250];
   double drugRequiredT1 = 0;
   double mlRequiredT1 = 0;
+  int numDaysTreatmentT1 = 0;
+  double volumeToDispenseT1 = 0;
 
   int dosesPerDay = 0;
 
@@ -114,9 +117,12 @@ class _Med12State extends State<Med12> {
     dosageNeededT1 = 0;
     drugRequiredT1 = 0;
     mlRequiredT1 = 0;
+    numDaysTreatmentT1 = 0;
+    volumeToDispenseT1 = 0;
     dosageNeededT1Text.text = '';
     drugRequiredT1Text.text = '';
     mlRequiredT1Text.text = '';
+    volumeToDispenseT1Text.text = '';
   }
 
   // dose calculation functions for tab 1
@@ -125,7 +131,7 @@ class _Med12State extends State<Med12> {
     dosageNeededT1Text.text = (dosageNeededT1).toStringAsFixed(2) + "mg/dose";
   }
 
-  calcDrugRequiredT1() {
+  void calcDrugRequiredT1() {
     drugRequiredT1 = dosageNeededT1 / concentrationT1;
     if (drugRequiredT1.isNaN || drugRequiredT1.isInfinite) {
       drugRequiredT1Text.text = (0).toStringAsFixed(2) + "mL";
@@ -134,12 +140,22 @@ class _Med12State extends State<Med12> {
     }
   }
 
-  calcMlRequiredT1() {
+  void calcMlRequiredT1() {
     mlRequiredT1 = drugRequiredT1 * 2;
     if (mlRequiredT1.isNaN || mlRequiredT1.isInfinite) {
       mlRequiredT1Text.text = (0).toStringAsFixed(2) + "mL";
     } else {
       mlRequiredT1Text.text = (mlRequiredT1).toStringAsFixed(2) + "mL";
+    }
+  }
+
+  void calcVolumeToDispenseT1() {
+    volumeToDispenseT1 = drugRequiredT1 * numDaysTreatmentT1;
+    if (volumeToDispenseT1.isNaN || volumeToDispenseT1.isInfinite) {
+      volumeToDispenseT1Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      volumeToDispenseT1Text.text =
+          (volumeToDispenseT1).toStringAsFixed(2) + "mL";
     }
   }
 
@@ -300,6 +316,7 @@ class _Med12State extends State<Med12> {
                                         calcDosageNeededT1();
                                         calcDrugRequiredT1();
                                         calcMlRequiredT1();
+                                        calcVolumeToDispenseT1();
                                       });
                                     }),
                               ),
@@ -324,6 +341,7 @@ class _Med12State extends State<Med12> {
                                         calcDosageNeededT1();
                                         calcDrugRequiredT1();
                                         calcMlRequiredT1();
+                                        calcVolumeToDispenseT1();
                                       });
                                     }),
                               ),
@@ -374,6 +392,7 @@ class _Med12State extends State<Med12> {
                                           setState(() {
                                             calcDrugRequiredT1();
                                             calcMlRequiredT1();
+                                            calcVolumeToDispenseT1();
                                           });
                                         },
                                         items: concentrationsT1.map((value) {
@@ -434,7 +453,59 @@ class _Med12State extends State<Med12> {
                                           TextStyle(color: Colors.purple)),
                                 ),
                               ),
-                            ]))
+
+                              // Child surface area
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 20, bottom: 0),
+                                child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Number of Days of Treatment",
+                                      hintText: "Number of Days of Treatment",
+                                    ),
+                                    onChanged: (value) {
+                                      final x = int.tryParse(value);
+                                      setState(() {
+                                        numDaysTreatmentT1 = x ?? 0;
+                                        calcVolumeToDispenseT1();
+                                      });
+                                    }),
+                              ),
+
+                              // Total volume to dispense output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 60),
+                                child: TextField(
+                                  controller: volumeToDispenseT1Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText:
+                                          "Total Volume To Dispense (mL)",
+                                      hintText: "0mL",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+                            ])),
+
+                        // **CAPSUL**
+                        Visibility(
+                            visible: (showCapsulT1),
+                            child: Column(children: []))
                       ],
                     ),
                   ),
