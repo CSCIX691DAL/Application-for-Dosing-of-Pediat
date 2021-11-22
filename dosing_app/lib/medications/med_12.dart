@@ -20,12 +20,16 @@ class Med12 extends StatefulWidget {
 
 class _Med12State extends State<Med12> {
   TextEditingController dosageNeededT1Text = TextEditingController();
-  // TextEditingController totalDoseNeededText = TextEditingController();
-  // TextEditingController numMgText = TextEditingController();
-  // TextEditingController numTabsNeededText = TextEditingController();
+  TextEditingController drugRequiredT1Text = TextEditingController();
+  TextEditingController mlRequiredT1Text = TextEditingController();
+
   double concentrationNeededMgMDoseT1 = 0;
   double childSurfaceAreaT1 = 0;
   double dosageNeededT1 = 0;
+  int concentrationT1 = 250;
+  List<int> concentrationsT1 = [250];
+  double drugRequiredT1 = 0;
+  double mlRequiredT1 = 0;
 
   int dosesPerDay = 0;
 
@@ -62,7 +66,7 @@ class _Med12State extends State<Med12> {
     super.dispose();
   }
 
-  //toggling different forms based on dropdown entry for tab 1
+  // toggling different forms based on dropdown entry for tab 1
   void toggleSuspensionT1() {
     showSuspensionT1 = true;
     showCapsulT1 = false;
@@ -108,16 +112,38 @@ class _Med12State extends State<Med12> {
     concentrationNeededMgMDoseT1 = 0;
     childSurfaceAreaT1 = 0;
     dosageNeededT1 = 0;
+    drugRequiredT1 = 0;
+    mlRequiredT1 = 0;
     dosageNeededT1Text.text = '';
+    drugRequiredT1Text.text = '';
+    mlRequiredT1Text.text = '';
   }
 
-  // functions for tab 1
+  // dose calculation functions for tab 1
   void calcDosageNeededT1() {
     dosageNeededT1 = concentrationNeededMgMDoseT1 * childSurfaceAreaT1;
     dosageNeededT1Text.text = (dosageNeededT1).toStringAsFixed(2) + "mg/dose";
   }
 
-  //toggling different forms based on dropdown entry for tab 2
+  calcDrugRequiredT1() {
+    drugRequiredT1 = dosageNeededT1 / concentrationT1;
+    if (drugRequiredT1.isNaN || drugRequiredT1.isInfinite) {
+      drugRequiredT1Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      drugRequiredT1Text.text = (drugRequiredT1).toStringAsFixed(2) + "mL";
+    }
+  }
+
+  calcMlRequiredT1() {
+    mlRequiredT1 = drugRequiredT1 * 2;
+    if (mlRequiredT1.isNaN || mlRequiredT1.isInfinite) {
+      mlRequiredT1Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      mlRequiredT1Text.text = (mlRequiredT1).toStringAsFixed(2) + "mL";
+    }
+  }
+
+  // toggling different forms based on dropdown entry for tab 2
   void toggleSuspensionT2() {
     showSuspensionT1 = true;
     showCapsulT1 = false;
@@ -161,7 +187,7 @@ class _Med12State extends State<Med12> {
 
   void resetValuesT2() {}
 
-  // dose calculation functions
+  // dose calculation functions for tab 2
 
   @override
   Widget build(BuildContext context) {
@@ -272,11 +298,13 @@ class _Med12State extends State<Med12> {
                                       setState(() {
                                         concentrationNeededMgMDoseT1 = x ?? 0;
                                         calcDosageNeededT1();
+                                        calcDrugRequiredT1();
+                                        calcMlRequiredT1();
                                       });
                                     }),
                               ),
 
-                              // Child weight
+                              // Child surface area
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 20, right: 20, top: 20, bottom: 0),
@@ -294,6 +322,8 @@ class _Med12State extends State<Med12> {
                                       setState(() {
                                         childSurfaceAreaT1 = x ?? 0;
                                         calcDosageNeededT1();
+                                        calcDrugRequiredT1();
+                                        calcMlRequiredT1();
                                       });
                                     }),
                               ),
@@ -318,6 +348,88 @@ class _Med12State extends State<Med12> {
                                       labelText:
                                           "Total Dosage Needed (mg/dose)",
                                       hintText: "0mg/dose",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+
+                              // Drug concentration dropdown
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 30, bottom: 0),
+                                  child: InputDecorator(
+                                    decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.purple, width: 2.0),
+                                        ),
+                                        labelText: "Drug Concentration"),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<int>(
+                                        isExpanded: true,
+                                        value: concentrationT1,
+                                        onChanged: (newValue) {
+                                          concentrationT1 = newValue!;
+                                          setState(() {
+                                            calcDrugRequiredT1();
+                                            calcMlRequiredT1();
+                                          });
+                                        },
+                                        items: concentrationsT1.map((value) {
+                                          return DropdownMenuItem(
+                                            child:
+                                                Text(value.toString() + "mg"),
+                                            value: value,
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  )),
+
+                              // Drug required output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                  controller: drugRequiredT1Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText: "Drug Required (mL)",
+                                      hintText: "0mL",
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple)),
+                                ),
+                              ),
+
+                              // mL required output field
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 30, bottom: 0),
+                                child: TextField(
+                                  controller: mlRequiredT1Text,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.purple, width: 2.0),
+                                      ),
+                                      labelText: "mL Required BID Dosing",
+                                      hintText: "0mL",
                                       labelStyle:
                                           TextStyle(color: Colors.purple)),
                                 ),
