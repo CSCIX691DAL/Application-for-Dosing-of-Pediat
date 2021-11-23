@@ -50,25 +50,14 @@ String dropdownvalue="3.75";
   }
 
   // Functions for each output field
-  void calcTotalDosageNeeded() {
+  String calcTotalDosagePropranol(double concentrationNeeded, double childWeight) {
     totalDoseNeeded = concentrationNeeded * childWeight;
     totalDrugDoseNeededText.text = (totalDoseNeeded).toStringAsFixed(2) +
         "mg/dose"; // handle null and String
+    return totalDrugDoseNeededText.text;
   }
 
-  void calcNumMg() {
-    numMg = totalDoseNeeded * numDaysTreatment;
-    numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-  }
 
-  void calcNumTabsNeeded() {
-    numTabsNeeded = (numMg / mgPerTablet).ceil();
-    if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-      numTabsNeededText.text = (0).toString() + " tablets";
-    } else {
-      numTabsNeededText.text = (numTabsNeeded).toString() + " tablets";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +102,55 @@ String dropdownvalue="3.75";
           body: SingleChildScrollView(
             child: Column(
               children: [
+                //drug concentration need
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    focusNode: myFocusNode,
+                    controller: concentrationNeededText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.indigo, width: 2.0),
+                      ),
+                      labelText: "Drug Concentration Needed (mg/kg/dose)",
+                      hintText: "0mg/kg/dose",
+                    ),
+                  ),
+                ),
+                //drug concentration need
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 5, right: 5, top: 5, bottom: 0),
+                  child: Slider(
+                    value: concentrationNeeded,
+                    min: 0.0,
+                    max: 1.0,
+                    divisions: 10,
+                    label: concentrationNeeded.toString(),
+                    onChanged: (value) {
+                      myFocusNode.requestFocus();
+                      setState(() {
+                        concentrationNeeded = value;
+                        concentrationNeededText.text =
+                        (concentrationNeeded.toString() + "mg/kg/dose");
+
+                      });
+                    },
+                  ),
+                ),
+
 
 
                 // Child's weight input field
                 Padding(
+
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
@@ -127,6 +161,15 @@ String dropdownvalue="3.75";
                         labelText: "Child's Weight (kg)",
                         hintText: "Child's Weight (kg)",
                       ),
+                      onChanged:(value){
+                        final output = double.tryParse(value);
+                        setState(() {
+                          childWeight = output ?? 0;
+                        calcTotalDosagePropranol(concentrationNeeded,childWeight);
+
+                        });
+
+                      }
                      ),
                 ),
 
@@ -182,6 +225,52 @@ String dropdownvalue="3.75";
                         ),
                       ),
                     )),
+               //Daily Propranolol Required (mL)
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    controller: numMgText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.purple, width: 2.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.purple, width: 2.0),
+                      ),
+                      labelText: "Daily Propranolol Required (mL)",
+                      hintText: '0.00mL',
+                      labelStyle: TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ),
+                //BID Propranolol Dose (mL/dose)
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    controller: numMgText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.purple, width: 2.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.purple, width: 2.0),
+                      ),
+                      labelText: "BID Propranolol Dose (mL/dose)",
+                      hintText: '0.00mL',
+                      labelStyle: TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ),
 
                 // Number of days of treatment input field
                 Padding(
