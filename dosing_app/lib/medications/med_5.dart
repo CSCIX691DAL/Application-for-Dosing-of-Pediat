@@ -19,18 +19,24 @@ class Med5 extends StatefulWidget {
 class _Med5State extends State<Med5> {
   TextEditingController concentrationNeededText = TextEditingController();
   TextEditingController totalDoseNeededText = TextEditingController();
-  TextEditingController numMgText = TextEditingController();
-  TextEditingController numTabsNeededText = TextEditingController();
+  TextEditingController totalDoseNeededTextMl = TextEditingController();
+  TextEditingController totalDrugDoseRequiredText = TextEditingController();
+  TextEditingController volumeToDispenseText = TextEditingController();
 
   double concentrationNeeded = 0;
   double childWeight = 0;
   double totalDoseNeeded = 0;
-  double numDaysTreatment = 0;
-  double numMg = 0;
-  int numTabsNeeded = 0;
+  int totalDoseNeededMl = 0;
+  double doesPerDay = 0;
+  int totalDoseRequired = 0;
+  int daysOfTreatment = 0;
+  int volumeToDispense = 0;
 
-  List<int> mgPerTabletItems = [10, 25];
-  int mgPerTablet = 10;
+
+  List<int> drugConcentrationItems = [25, 250];
+  int drugConcentrationDropDown = 25;
+
+
 
   // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
@@ -51,7 +57,31 @@ class _Med5State extends State<Med5> {
   void calcTotalDosageNeeded() {
     totalDoseNeeded = concentrationNeeded * childWeight;
     totalDoseNeededText.text = (totalDoseNeeded).toStringAsFixed(2) +
-        "mg/dose"; // handle null and String
+        " (mg/dose)"; // handle null and String
+  }
+
+  void calcTotalDosageNeededMl() {
+    totalDoseNeededMl = (totalDoseNeeded/drugConcentrationDropDown).ceil();
+    if (totalDoseNeededMl.isNaN || totalDoseNeededMl.isInfinite) {
+      totalDoseNeededTextMl.text = (0).toString() + " (ml)";
+    } else {
+      totalDoseNeededTextMl.text = (totalDoseNeededMl).toString() + " (ml)";
+    }
+  }
+
+  void calcDrugRequired() {
+    totalDoseRequired = (totalDoseNeededMl/doesPerDay).ceil();
+    if (totalDoseRequired.isNaN || totalDoseRequired.isInfinite) {
+      totalDrugDoseRequiredText.text = (0).toString() + " (mL/dose)";
+    } else {
+      totalDrugDoseRequiredText.text = (totalDoseRequired).toString() + " (mL/dose)";
+    }
+  }
+
+  void calcVolumeToDispense() {
+    volumeToDispense = totalDoseRequired * daysOfTreatment;
+    volumeToDispenseText.text = (volumeToDispense).toStringAsFixed(2) +
+        " (mL)"; // handle null and String
   }
 
   @override
@@ -112,6 +142,9 @@ class _Med5State extends State<Med5> {
                         setState(() {
                           concentrationNeeded = x ?? 0; // handle null and String
                           calcTotalDosageNeeded();
+                          calcTotalDosageNeededMl();
+                          calcDrugRequired();
+                          calcVolumeToDispense();
                         });
                       }),
                 ),
@@ -131,6 +164,9 @@ class _Med5State extends State<Med5> {
                         setState(() {
                           childWeight = x ?? 0; // handle null and String
                           calcTotalDosageNeeded();
+                          calcTotalDosageNeededMl();
+                          calcDrugRequired();
+                          calcVolumeToDispense();
                         });
                       }),
                 ),
@@ -152,7 +188,150 @@ class _Med5State extends State<Med5> {
                           BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dosage Needed (mg/dose)",
-                        hintText: "0mg/dose",
+                        hintText: "Total Dosage Needed (mg/dose)",
+                        labelStyle: TextStyle(color: Colors.purple)),
+                  ),
+                ),
+
+                Padding(
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 30, bottom: 0),
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.purple, width: 2.0),
+                          ),
+                          labelText: "Drug Concentration (mg/ml)"),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<int>(
+                          // hint: Text('Please choose a location'),
+                          isExpanded: true,
+                          value: drugConcentrationDropDown,
+                          onChanged: (x) {
+                            setState(() {
+                              drugConcentrationDropDown = x!;
+                              calcTotalDosageNeededMl();
+                              calcDrugRequired();
+                              calcVolumeToDispense();
+                            });
+                          },
+                          items: drugConcentrationItems.map((value) {
+                            return DropdownMenuItem(
+                              child: Text(value.toString() + " (mg/ml)"),
+                              value: value,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    )),
+
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    controller: totalDoseNeededTextMl,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        labelText: "Total Drug Dosage Needed (ml)",
+                        hintText: "Total Drug Dosage Needed (ml)",
+                        labelStyle: TextStyle(color: Colors.purple)),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 20, bottom: 0),
+                  child: TextField(
+                      keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "# of doses/day",
+                        hintText: "# of doses/day",
+                      ),
+                      onChanged: (value) {
+                        final x = double.tryParse(value);
+                        setState(() {
+                          doesPerDay = x ?? 0;
+                          calcDrugRequired();
+                          calcVolumeToDispense();// handle null and String
+                        });
+                      }),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    controller: totalDrugDoseRequiredText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        labelText: "Drug Required (mL/dose)",
+                        hintText: "Drug Required (mL/dose)",
+                        labelStyle: TextStyle(color: Colors.purple)),
+                  ),
+                ),
+
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 20, bottom: 0),
+                  child: TextField(
+                      keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "# Days of Treatment",
+                        hintText: "# Days of Treatment",
+                      ),
+                      onChanged: (value) {
+                        final x = int.tryParse(value);
+                        setState(() {
+                          daysOfTreatment = x ?? 0;
+                          calcVolumeToDispense(); // handle null and String
+                        });
+                      }),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 60),
+                  child: TextField(
+                    controller: volumeToDispenseText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        labelText: "Total Volume to Dispense (mL)",
+                        hintText: "Total Volume to Dispense (mL)",
                         labelStyle: TextStyle(color: Colors.purple)),
                   ),
                 ),
