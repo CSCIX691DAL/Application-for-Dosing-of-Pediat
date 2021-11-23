@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
-class Med5 extends StatefulWidget {
-  Med5(
+class Med9 extends StatefulWidget {
+  Med9(
       {Key? key,
-      required this.index,
-      required this.medications,
-      required this.favMedications})
+        required this.index,
+        required this.medications,
+        required this.favMedications})
       : super(key: key);
-
   dynamic index;
   dynamic medications;
   dynamic favMedications;
 
   @override
-  _Med5State createState() => _Med5State();
+  _Med9State createState() => _Med9State();
 }
 
-class _Med5State extends State<Med5> {
+class _Med9State extends State<Med9> {
   @override
   Widget build(BuildContext context) {
     Map medication = widget.medications[widget.index];
@@ -24,8 +23,7 @@ class _Med5State extends State<Med5> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(medication['name']),
-          backgroundColor: Colors.redAccent,
+        title: const Text("Isotretinoin"),
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -52,18 +50,20 @@ class _Med5State extends State<Med5> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const formFieldContainer("Drug Concentration Needed (mg/kg/day)"),
-            const formFieldContainer("Child's Weight (kg)"), 
-            const formFieldContainer("Total Drug Dose Needed (mg/dose)"),
-            
+            formFieldContainer("Patient weight (kg)"),
+            formFieldContainer("Current dose per day (mg)"),
+            formFieldContainer("Duration of current dose (Days)"),
+            formFieldContainer("Prior dose per day (mg)"),
+            //formFieldContainer("Drug concentration (mg/ml)"), //drop down  list
+            formFieldContainer("Duration of prior dose (days)"),
+            formFieldContainer("Prior dose per day (mg) 2"),
+            formFieldContainer("Duration of prior dose (days) 2"),
           ],
         ),
       ),
     );
   }
 }
-
-/* Class for creating text form*/
 class formFieldContainer extends StatelessWidget {
   final String formTitle;
 
@@ -82,7 +82,7 @@ class formFieldContainer extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
               child: Text(
                 formTitle,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
@@ -90,22 +90,18 @@ class formFieldContainer extends StatelessWidget {
               ),
             ),
             TextField(
-              onChanged: (userInput){
-                userInput;
-              },
-              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: "Enter Value",
                 enabledBorder: OutlineInputBorder(
                   borderSide:
                   BorderSide(color: Colors.purple.shade900, width: 3),
-                  borderRadius: const BorderRadius.all(
+                  borderRadius: BorderRadius.all(
                     Radius.circular(30),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue.shade400, width: 3),
-                  borderRadius: const BorderRadius.all(
+                  borderRadius: BorderRadius.all(
                     Radius.circular(50),
                   ),
                 ),
@@ -118,6 +114,7 @@ class formFieldContainer extends StatelessWidget {
   }
 }
 
+//Drop Down list widget
 
 class dropDownList extends StatefulWidget {
   //const dropDownList({this.formTitle = formTitle});
@@ -186,7 +183,3 @@ class _dropDownListState extends State<dropDownList> {
     ),
   );
 }
-
-
-
-
