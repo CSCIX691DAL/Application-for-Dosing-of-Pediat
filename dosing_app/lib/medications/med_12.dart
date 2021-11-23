@@ -56,24 +56,29 @@ class _Med12State extends State<Med12> {
   // tab 2 output fields
   TextEditingController drugRequiredMgT2Text = TextEditingController();
   TextEditingController drugRequiredMlT2Text = TextEditingController();
-  TextEditingController unitPerDoseText = TextEditingController();
   TextEditingController volumeToDispenseT2Text = TextEditingController();
+  TextEditingController unitPerDoseT2Text = TextEditingController();
+  TextEditingController unitToDispenseT2Text = TextEditingController();
 
   // tab 2 variables
   double bodySurfaceAreaT2 = 0;
   int drugRequiredMgT2 = 0;
   double drugRequiredMlT2 = 0;
-  int unitPeDoseT2 = 0;
+  int unitPerDoseT2 = 0;
   int dosesPerDayT2 = 0;
   int numDaysTreatmentT2 = 0;
   double volumeToDispenseT2 = 0;
   int numDosesPerDayT2 = 2;
+  double unitToDispenseT2 = 0;
+  String unitToDispenseStrT2 = '';
 
   String methodOfAdminT2 = "Suspension";
   bool showSuspensionT2 = true;
   bool showCapsuleT2 = false;
   bool showTabletT2 = false;
   bool showIntravenousT2 = false;
+  String unitPerDoseLabelTextT2 = '';
+  String unitPerDoseHintTextT2 = '';
 
   // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
@@ -227,6 +232,8 @@ class _Med12State extends State<Med12> {
     showCapsuleT2 = true;
     showTabletT2 = false;
     showIntravenousT2 = false;
+    unitPerDoseLabelTextT2 = 'Capsules per Dose';
+    unitPerDoseHintTextT2 = '0 capsules';
     resetValuesT2();
   }
 
@@ -235,6 +242,8 @@ class _Med12State extends State<Med12> {
     showCapsuleT2 = false;
     showTabletT2 = true;
     showIntravenousT2 = false;
+    unitPerDoseLabelTextT2 = 'Tablets per Dose';
+    unitPerDoseHintTextT2 = '0 tablets';
     resetValuesT2();
   }
 
@@ -243,6 +252,8 @@ class _Med12State extends State<Med12> {
     showCapsuleT2 = false;
     showTabletT2 = false;
     showIntravenousT2 = true;
+    unitPerDoseLabelTextT2 = 'mg Intravenous per Dose';
+    unitPerDoseHintTextT2 = '0 mg';
     resetValuesT2();
   }
 
@@ -252,9 +263,9 @@ class _Med12State extends State<Med12> {
     } else if (methodOfAdminT2 == "Capsule") {
       toggleCapsuleT2();
     } else if (methodOfAdminT2 == "Tablet") {
-      toggleTabletT1();
+      toggleTabletT2();
     } else if (methodOfAdminT2 == "Intravenous") {
-      toggleIntravenousT1();
+      toggleIntravenousT2();
     }
   }
 
@@ -262,14 +273,14 @@ class _Med12State extends State<Med12> {
     bodySurfaceAreaT2 = 0;
     drugRequiredMgT2 = 0;
     drugRequiredMlT2 = 0;
-    unitPeDoseT2 = 0;
-    dosesPerDayT2 = 0;
+    unitPerDoseT2 = 0;
     numDaysTreatmentT2 = 0;
     volumeToDispenseT2 = 0;
+    unitPerDoseT2 = 0;
 
     drugRequiredMgT2Text.text = '';
     drugRequiredMlT2Text.text = '';
-    unitPerDoseText.text = '';
+    unitPerDoseT2Text.text = '';
     volumeToDispenseT2Text.text = '';
   }
 
@@ -298,12 +309,45 @@ class _Med12State extends State<Med12> {
 
   void calcVolumeToDispenseT2() {
     volumeToDispenseT2 =
-        drugRequiredMlT2 * drugRequiredMgT2 * numDaysTreatmentT2;
+        drugRequiredMlT2 * numDosesPerDayT2 * numDaysTreatmentT2;
+
     if (volumeToDispenseT2.isNaN || volumeToDispenseT2.isInfinite) {
       volumeToDispenseT2Text.text = (0).toStringAsFixed(2) + "mL";
     } else {
       volumeToDispenseT2Text.text =
           (volumeToDispenseT2).toStringAsFixed(2) + "mL";
+    }
+  }
+
+  void calcUnitPerDoseT2() {
+    if (showCapsuleT2) {
+      unitPerDoseT2 = (drugRequiredMgT2 / 250).round();
+      unitPerDoseT2Text.text = '0 capsules';
+    } else {
+      unitPerDoseT2 = (drugRequiredMgT2 / 500).round();
+      if (showTabletT2) {
+        unitPerDoseT2Text.text = unitPerDoseT2.toString() + ' capsules';
+      } else {
+        unitPerDoseT2Text.text = unitPerDoseT2.toString() + 'mg';
+      }
+    }
+  }
+
+  calcUnitToDispenseT2() {
+    unitToDispenseT2 =
+        unitPerDoseT2.toDouble() * numDosesPerDayT2 * numDaysTreatmentT2;
+    if (unitToDispenseT2.isNaN || unitToDispenseT2.isInfinite) {
+      unitToDispenseStrT2 = '0';
+    } else {
+      unitToDispenseStrT2 = (unitToDispenseT2).toStringAsFixed(2);
+    }
+
+    if (showCapsuleT2) {
+      unitToDispenseT2Text.text = unitToDispenseStrT2 + " capsules";
+    } else if (showTabletT2) {
+      unitToDispenseT2Text.text = unitToDispenseStrT2 + " tablets";
+    } else if (showIntravenousT2) {
+      unitToDispenseT2Text.text = unitToDispenseStrT2 + "mg intravenous";
     }
   }
 
@@ -556,14 +600,14 @@ class _Med12State extends State<Med12> {
                                 ),
                               ),
 
-                              // NUmber of days of treatment input field
+                              // Number of days of treatment input field
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 20, right: 20, top: 20, bottom: 0),
                                 child: TextField(
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                            decimal: false),
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: "Number of Days of Treatment",
@@ -716,7 +760,7 @@ class _Med12State extends State<Med12> {
                                 child: TextField(
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                            decimal: false),
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: "Number of Days of Treatment",
@@ -844,6 +888,29 @@ class _Med12State extends State<Med12> {
                             ),
                           ),
 
+                          // drug required ml output field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextField(
+                              controller: drugRequiredMlT2Text,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Drug Required (mL/dose)",
+                                  hintText: "0mL/dose",
+                                  labelStyle: TextStyle(color: Colors.purple)),
+                            ),
+                          ),
+
                           // Num doses per day
                           Padding(
                             padding: const EdgeInsets.only(
@@ -901,6 +968,142 @@ class _Med12State extends State<Med12> {
                                   labelText: "Total Volume to Dispense (mL)",
                                   hintText: "0mL",
                                   labelStyle: TextStyle(color: Colors.purple)),
+                            ),
+                          ),
+                        ])),
+
+                    // **CAPSULE or TABLET or INTRAVENOUS**
+                    Visibility(
+                        visible: (showCapsuleT2 ||
+                            showTabletT2 ||
+                            showIntravenousT2),
+                        child: Column(children: [
+                          // Body surface area input field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20, bottom: 0),
+                            child: TextField(
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Body Surface Area (m²)",
+                                  hintText: "Body Surface Area (m²)",
+                                ),
+                                onChanged: (value) {
+                                  final x = double.tryParse(value);
+                                  setState(() {
+                                    bodySurfaceAreaT2 = x ?? 0;
+                                    calcDrugRequiredMgT2();
+                                    calcUnitPerDoseT2();
+                                    calcUnitToDispenseT2();
+                                  });
+                                }),
+                          ),
+
+                          // drug required mg output field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextField(
+                              controller: drugRequiredMgT2Text,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Drug Required (mg/dose)",
+                                  hintText: "0mg/dose",
+                                  labelStyle: TextStyle(color: Colors.purple)),
+                            ),
+                          ),
+
+                          // unit per dose output field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextField(
+                              controller: unitPerDoseT2Text,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: unitPerDoseLabelTextT2,
+                                  hintText: unitPerDoseHintTextT2,
+                                  labelStyle:
+                                      const TextStyle(color: Colors.purple)),
+                            ),
+                          ),
+                          // Num doses per day
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: TextFormField(
+                              initialValue: numDosesPerDayT2.toString(),
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Number of Doses per Day",
+                                hintText: "Number of Doses per Day",
+                              ),
+                            ),
+                          ),
+                          // number of days of treatment input field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20, bottom: 0),
+                            child: TextField(
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: false),
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Number of Days of Treatment",
+                                  hintText: "Number of Days of Treatment",
+                                ),
+                                onChanged: (value) {
+                                  final x = int.tryParse(value);
+                                  setState(() {
+                                    numDaysTreatmentT2 = x ?? 0;
+                                    calcUnitToDispenseT2();
+                                  });
+                                }),
+                          ),
+                          // unit to dispense output field
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 60),
+                            child: TextField(
+                              controller: unitToDispenseT2Text,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: unitPerDoseLabelTextT2,
+                                  hintText: unitPerDoseHintTextT2,
+                                  labelStyle:
+                                      const TextStyle(color: Colors.purple)),
                             ),
                           ),
                         ]))
