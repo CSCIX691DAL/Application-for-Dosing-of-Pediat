@@ -17,176 +17,148 @@ class Med5 extends StatefulWidget {
 }
 
 class _Med5State extends State<Med5> {
+  TextEditingController concentrationNeededText = TextEditingController();
+  TextEditingController totalDoseNeededText = TextEditingController();
+  TextEditingController numMgText = TextEditingController();
+  TextEditingController numTabsNeededText = TextEditingController();
+
+  double concentrationNeeded = 0;
+  double childWeight = 0;
+  double totalDoseNeeded = 0;
+  double numDaysTreatment = 0;
+  double numMg = 0;
+  int numTabsNeeded = 0;
+
+  List<int> mgPerTabletItems = [10, 25];
+  int mgPerTablet = 10;
+
+  // Handle closing the keyboard when use taps anywhere else on the screen
+  late FocusNode myFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    myFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  // Functions for each output field
+  void calcTotalDosageNeeded() {
+    totalDoseNeeded = concentrationNeeded * childWeight;
+    totalDoseNeededText.text = (totalDoseNeeded).toStringAsFixed(2) +
+        "mg/dose"; // handle null and String
+  }
+
   @override
   Widget build(BuildContext context) {
     Map medication = widget.medications[widget.index];
     bool isFavourited = widget.favMedications.contains(medication);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(medication['name']),
-          backgroundColor: Colors.redAccent,
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (isFavourited) {
-                        widget.favMedications.remove(medication);
-                      } else {
-                        widget.favMedications.add(medication);
-                      }
-                    });
-                    print(widget.favMedications);
-                  },
-                  child: Icon(
-                    isFavourited
-                        ? Icons.bookmark
-                        : Icons.bookmark_outline_rounded,
-                    size: 34,
-                    // color: isFavourited ? Colors,
-                  )))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const formFieldContainer("Drug Concentration Needed (mg/kg/day)"),
-            const formFieldContainer("Child's Weight (kg)"), 
-            const formFieldContainer("Total Drug Dose Needed (mg/dose)"),
-            
-          ],
-        ),
-      ),
-    );
-  }
-}
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
 
-/* Class for creating text form*/
-class formFieldContainer extends StatelessWidget {
-  final String formTitle;
-
-  const formFieldContainer(this.formTitle);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
-              child: Text(
-                formTitle,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(medication['name']),
+            actions: <Widget>[
+              Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isFavourited) {
+                            widget.favMedications.remove(medication);
+                          } else {
+                            widget.favMedications.add(medication);
+                          }
+                        });
+                      },
+                      child: Icon(
+                        isFavourited
+                            ? Icons.bookmark
+                            : Icons.bookmark_outline_rounded,
+                        size: 34,
+                        // color: isFavourited ? Colors,
+                      )))
+            ],
+          ),
+          backgroundColor: Colors.white, //page background color
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 20, bottom: 0),
+                  child: TextField(
+                      keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Drug Concentration Needed (mg/kg/day)",
+                        hintText: "Drug Concentration Needed (mg/kg/day)",
+                      ),
+                      onChanged: (value) {
+                        final x = double.tryParse(value);
+                        setState(() {
+                          concentrationNeeded = x ?? 0; // handle null and String
+                          calcTotalDosageNeeded();
+                        });
+                      }),
                 ),
-              ),
-            ),
-            TextField(
-              onChanged: (userInput){
-                userInput;
-              },
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: "Enter Value",
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                  BorderSide(color: Colors.purple.shade900, width: 3),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 20, bottom: 0),
+                  child: TextField(
+                      keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Child's Weight (kg)",
+                        hintText: "Child's Weight (kg)",
+                      ),
+                      onChanged: (value) {
+                        final x = double.tryParse(value);
+                        setState(() {
+                          childWeight = x ?? 0; // handle null and String
+                          calcTotalDosageNeeded();
+                        });
+                      }),
+                ),
+                // Total dosage needed output field
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    controller: totalDoseNeededText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.purple, width: 2.0),
+                        ),
+                        labelText: "Total Dosage Needed (mg/dose)",
+                        hintText: "0mg/dose",
+                        labelStyle: TextStyle(color: Colors.purple)),
                   ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue.shade400, width: 3),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(50),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+              ],
+            ),
+          ),
+        ));
   }
 }
-
-
-class dropDownList extends StatefulWidget {
-  //const dropDownList({this.formTitle = formTitle});
-  String listTitle; // receives the value
-
-  dropDownList({required this.listTitle});
-
-  @override
-  _dropDownListState createState() => _dropDownListState();
-}
-
-class _dropDownListState extends State<dropDownList> {
-  final items = ['item1', 'item2', 'item3', 'item4'];
-  String? value;
-
-  // final String listTitle;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
-              child: Text(
-                widget.listTitle,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.purple.shade900, width: 3),
-              ),
-              child: DropdownButtonHideUnderline(
-                //hides the underline in the text
-                child: DropdownButton<String>(
-                  value: value,
-                  iconSize: 36,
-                  icon: Icon(Icons.arrow_drop_down, color: Colors.black),
-                  items: items.map(buildMenuItem).toList(),
-                  isExpanded: true,
-                  //onChanged: (value) => setState(() => this.value = value),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
-    value: item,
-    child: Text(
-      item,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-    ),
-  );
-}
-
-
-
-
