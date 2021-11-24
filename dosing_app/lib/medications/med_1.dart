@@ -176,23 +176,9 @@ class _Med1State extends State<Med1> {
                         final x = double.tryParse(value);
                         setState(() {
                           childWeight = x ?? 0; // handle null and String
-                          totalDoseNeeded = concentrationNeeded * childWeight;
-                          totalDoseNeededText.text =
-                              (totalDoseNeeded).toStringAsFixed(2) + "mg/dose";
-                          numMg = totalDoseNeeded * numDaysTreatment;
-                          if (numMg.isNaN || numMg.isInfinite) {
-                            numMgText.text = (0).toStringAsFixed(2) + "mg";
-                          } else {
-                            numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-                          }
-                          numTabsNeeded = (numMg / mgPerTablet).ceil();
-                          if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-                            numTabsNeededText.text =
-                                (0).toString() + " tablets";
-                          } else {
-                            numTabsNeededText.text =
-                                (numTabsNeeded).toString() + " tablets";
-                          }
+                          calcTotalDosageNeeded();
+                          calcNumMg();
+                          calcNumTabsNeeded();
                         });
                       }),
                 ),
