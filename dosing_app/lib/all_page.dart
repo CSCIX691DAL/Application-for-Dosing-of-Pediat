@@ -65,6 +65,7 @@ class _AllPageState extends State<AllPage> {
                         TextSpan(text: 'Dan Hallam - Developer\n'),
                         TextSpan(text: 'Faiyaz Tanim - Developer\n'),
                         TextSpan(text: 'Hamza Ali - Developer\n'),
+                        TextSpan(text: 'Hongjing Bian - Developer\n'),
                         TextSpan(text: 'Ichiro Banskota - Developer\n'),
                         TextSpan(text: 'Jason Nguyen - Developer\n'),
                         TextSpan(text: 'Loren Wolfe - Developer\n'),

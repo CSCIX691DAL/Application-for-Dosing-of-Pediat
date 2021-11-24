@@ -103,7 +103,7 @@ class _Med3State extends State<Med3> {
   }
 
   void calcVolumeToDispenseT2() {
-    volumeToDispenseT2 = dosesPerDayT2 * numDaysTreatmentT2;
+    volumeToDispenseT2 = drugRequiredT2 * dosesPerDayT2 * numDaysTreatmentT2;
     volumeToDispenseT2Text.text =
         (volumeToDispenseT2).toStringAsFixed(2) + "mL";
   }
