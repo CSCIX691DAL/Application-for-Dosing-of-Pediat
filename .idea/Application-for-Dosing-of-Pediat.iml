@@ -3,12 +3,17 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+<<<<<<< HEAD
       <excludeFolder url="file://$MODULE_DIR$/Application-for-Dosing-of-Pediat/dosing_app/build" />
       <excludeFolder url="file://$MODULE_DIR$/Application-for-Dosing-of-Pediat/dosing_app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/Application-for-Dosing-of-Pediat/dosing_app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/dosing_app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/dosing_app/.pub" />
+=======
+>>>>>>> origin/main
       <excludeFolder url="file://$MODULE_DIR$/dosing_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/dosing_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/dosing_app/.dart_tool" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
