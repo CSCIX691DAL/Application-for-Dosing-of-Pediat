@@ -26,6 +26,7 @@ class _Med3State extends State<Med3> {
   TextEditingController volumeToDispenseT1Text = TextEditingController();
 
   TextEditingController drugRequiredT2Text = TextEditingController();
+  TextEditingController dosesPerDayT2Text = TextEditingController();
   TextEditingController volumeToDispenseT2Text = TextEditingController();
 
   double concentrationNeededT1 = 0;
@@ -40,7 +41,7 @@ class _Med3State extends State<Med3> {
 
   double concentrationNeededT2 = 0;
   double drugRequiredT2 = 0;
-  double dosesPerDayT2 = 0;
+  int dosesPerDayT2 = 0;
   int numDaysTreatmentT2 = 0;
   double volumeToDispenseT2 = 0;
 
@@ -329,7 +330,6 @@ class _Med3State extends State<Med3> {
                                       (dosesPerDayT1.toString() +
                                           " doses per day");
                                 }
-
                                 calcDrugRequiredT1();
                                 calcVolumeToDispenseT1();
                               });
@@ -499,34 +499,57 @@ class _Med3State extends State<Med3> {
                           ),
                         ),
 
-                        // Number of doses per day
+                        // doses per day slider output
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 1.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.indigo, width: 2.0),
-                                ),
-                                labelText: "Number of doses per day",
-                                hintText: "0 doses per day",
+                            focusNode: myFocusNode,
+                            controller: dosesPerDayT2Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1.0),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  dosesPerDayT2 = x ?? 0;
-                                  calcVolumeToDispenseT2();
-                                });
-                              }),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.indigo, width: 2.0),
+                              ),
+                              labelText: "Doses per Day",
+                              hintText: "0 doses per day",
+                            ),
+                          ),
+                        ),
+
+                        // doses per day slider
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 0),
+                          child: Slider(
+                            value: dosesPerDayT2.toDouble(),
+                            min: 0.0,
+                            max: 5.0,
+                            divisions: 5,
+                            label: dosesPerDayT2.toString(),
+                            onChanged: (value) {
+                              myFocusNode.requestFocus();
+                              setState(() {
+                                dosesPerDayT2 = value.toInt();
+                                if (dosesPerDayT2 == 1) {
+                                  dosesPerDayT2Text.text =
+                                      (dosesPerDayT2.toString() +
+                                          " dose per day");
+                                } else {
+                                  dosesPerDayT2Text.text =
+                                      (dosesPerDayT2.toString() +
+                                          " doses per day");
+                                }
+                                calcVolumeToDispenseT2();
+                              });
+                            },
+                          ),
                         ),
 
                         // Number of days of treatment
@@ -562,7 +585,7 @@ class _Med3State extends State<Med3> {
                         // Volume to dispense
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 0),
+                              left: 20, right: 20, top: 30, bottom: 60),
                           child: TextField(
                             controller: volumeToDispenseT2Text,
                             readOnly: true,
