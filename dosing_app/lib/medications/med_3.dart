@@ -21,6 +21,7 @@ class Med3 extends StatefulWidget {
 class _Med3State extends State<Med3> {
   TextEditingController totalDoseNeededMgT1Text = TextEditingController();
   TextEditingController totalDoseNeededMlT1Text = TextEditingController();
+  TextEditingController dosesPerDayT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
   TextEditingController volumeToDispenseT1Text = TextEditingController();
 
@@ -32,7 +33,7 @@ class _Med3State extends State<Med3> {
   double totalDoseNeededMgT1 = 0;
   double totalDoseNeededMlT1 = 0;
   double drugConcentrationT1 = 0;
-  double dosesPerDayT1 = 0;
+  int dosesPerDayT1 = 0;
   double drugRequiredT1 = 0;
   int numDaysTreatmentT1 = 0;
   double volumeToDispenseT1 = 0;
@@ -281,27 +282,59 @@ class _Med3State extends State<Med3> {
                           ),
                         ),
 
-                        // Number of doses per day
+                        // doses per day slider output
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "Doses per day",
-                                hintText: "Doses per day",
+                            focusNode: myFocusNode,
+                            controller: dosesPerDayT1Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1.0),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  dosesPerDayT1 = x ?? 0;
-                                  calcDrugRequiredT1();
-                                  calcVolumeToDispenseT1();
-                                });
-                              }),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.indigo, width: 2.0),
+                              ),
+                              labelText: "Doses per Day",
+                              hintText: "0 doses per day",
+                            ),
+                          ),
+                        ),
+
+                        // doses per day slider
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 0),
+                          child: Slider(
+                            value: dosesPerDayT1.toDouble(),
+                            min: 0.0,
+                            max: 5.0,
+                            divisions: 5,
+                            label: dosesPerDayT1.toString(),
+                            onChanged: (value) {
+                              myFocusNode.requestFocus();
+                              setState(() {
+                                dosesPerDayT1 = value.toInt();
+                                if (dosesPerDayT1 == 1) {
+                                  dosesPerDayT1Text.text =
+                                      (dosesPerDayT1.toString() +
+                                          " dose per day");
+                                } else {
+                                  dosesPerDayT1Text.text =
+                                      (dosesPerDayT1.toString() +
+                                          " doses per day");
+                                }
+
+                                calcDrugRequiredT1();
+                                calcVolumeToDispenseT1();
+                              });
+                            },
+                          ),
                         ),
 
                         // Drug required
