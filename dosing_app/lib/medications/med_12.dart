@@ -207,7 +207,6 @@ class _Med12State extends State<Med12> {
     }
   }
 
-  //TODO: fix calculation to use numDaysTreatment
   void calcCapsulesToDispenseT1() {
     capsulesToDispenseT1 =
         ((dosageNeededT1 / 250) * 2).ceil() * numDaysTreatmentT1;

@@ -114,50 +114,74 @@ class _Med1State extends State<Med1> {
             child: Column(
               children: [
                 // Concentration needed output field
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 0),
-                  child: TextField(
-                    focusNode: myFocusNode,
-                    controller: concentrationNeededText,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.indigo, width: 2.0),
-                      ),
-                      labelText: "Concentration Needed (mg/kg/dose)",
-                      hintText: "0mg/kg/dose",
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(
+                //       left: 20, right: 20, top: 30, bottom: 0),
+                //   child: TextField(
+                //     focusNode: myFocusNode,
+                //     controller: concentrationNeededText,
+                //     readOnly: true,
+                //     decoration: const InputDecoration(
+                //       border: OutlineInputBorder(),
+                //       enabledBorder: OutlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                //       ),
+                //       focusedBorder: OutlineInputBorder(
+                //         borderSide:
+                //             BorderSide(color: Colors.indigo, width: 2.0),
+                //       ),
+                //       labelText: "Concentration Needed (mg/kg/dose)",
+                //       hintText: "0mg/kg/dose",
+                //     ),
+                //   ),
+                // ),
 
-                // Drug concentration needed slider
+                // // Drug concentration needed slider
+                // Padding(
+                //   padding: const EdgeInsets.only(
+                //       left: 5, right: 5, top: 5, bottom: 0),
+                //   child: Slider(
+                //     value: concentrationNeeded,
+                //     min: 0.0,
+                //     max: 1.0,
+                //     divisions: 10,
+                //     label: concentrationNeeded.toString(),
+                //     onChanged: (value) {
+                //       myFocusNode.requestFocus();
+                //       setState(() {
+                //         concentrationNeeded = value;
+                //         concentrationNeededText.text =
+                //             (concentrationNeeded.toString() + "mg/kg/dose");
+                //         calcTotalDosageNeeded();
+                //         calcNumMg();
+                //         calcNumTabsNeeded();
+                //       });
+                //     },
+                //   ),
+                // ),
+
+                // Drug concentration input field
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 5, right: 5, top: 5, bottom: 0),
-                  child: Slider(
-                    value: concentrationNeeded,
-                    min: 0.0,
-                    max: 1.0,
-                    divisions: 10,
-                    label: concentrationNeeded.toString(),
-                    onChanged: (value) {
-                      myFocusNode.requestFocus();
-                      setState(() {
-                        concentrationNeeded = value;
-                        concentrationNeededText.text =
-                            (concentrationNeeded.toString() + "mg/kg/dose");
-                        calcTotalDosageNeeded();
-                        calcNumMg();
-                        calcNumTabsNeeded();
-                      });
-                    },
-                  ),
+                      left: 20, right: 20, top: 20, bottom: 0),
+                  child: TextField(
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Concentration Needed (mg/kg/dose)",
+                        hintText: "Concentration Needed (mg/kg/dose)",
+                      ),
+                      onChanged: (value) {
+                        final x = double.tryParse(value);
+                        setState(() {
+                          concentrationNeeded =
+                              x ?? 0; // handle null and String
+                          calcTotalDosageNeeded();
+                          calcNumMg();
+                          calcNumTabsNeeded();
+                        });
+                      }),
                 ),
 
                 // Child's weight input field
