@@ -494,7 +494,7 @@ class _Med17State extends State<Med17> {
                                     color: Colors.purple, width: 2.0),
                               ),
                               labelText: "Tablets/dose",
-                              hintText: "o tablets",
+                              hintText: "0 tablets",
                               labelStyle: TextStyle(color: Colors.purple)),
                         ),
                       ),
@@ -505,7 +505,7 @@ class _Med17State extends State<Med17> {
                             left: 20, right: 20, top: 30, bottom: 0),
                         child: TextField(
                           focusNode: myFocusNode,
-                          controller: dosesPerDayT1Text,
+                          controller: dosesPerDayT2Text,
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
