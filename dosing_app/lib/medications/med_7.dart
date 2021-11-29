@@ -20,16 +20,18 @@ class Med7 extends StatefulWidget {
 class _Med7State extends State<Med7> {
   TextEditingController concentrationNeededText = TextEditingController();
   TextEditingController totalDrugDoseNeededText = TextEditingController();
-  TextEditingController numMgText = TextEditingController();
-  TextEditingController numTabsNeededText = TextEditingController();
+  TextEditingController DailyPropanololrequired = TextEditingController();
+  TextEditingController BIdproponol = TextEditingController();
+  TextEditingController TotalVolumeToDisperse = TextEditingController();
 
   double concentrationNeeded = 0;
   double childWeight = 0;
   double totalDoseNeeded = 0;
-  double numDaysTreatment = 0;
-  double numMg = 0;
-  int numTabsNeeded = 0;
-
+  double BIdproponoldose = 0;
+  double DailyPropanolol = 0;
+  double finalDropdown=0;
+  double totalvolumetodisperse=0;
+  int days=0;
   List<String> PropranololConcentration = ["3.75", "4.28", "5"];
 
   int mgPerTablet = 10;
@@ -55,6 +57,24 @@ String dropdownvalue="3.75";
     totalDrugDoseNeededText.text = (totalDoseNeeded).toStringAsFixed(2) +
         "mg/dose"; // handle null and String
     return totalDrugDoseNeededText.text;
+  }
+  String DailyRequired(double totalNeed, double concentration){
+     DailyPropanolol= totalNeed/concentration;
+     DailyPropanololrequired.text=(DailyPropanolol).toStringAsFixed(2)+"ml";
+    return DailyPropanololrequired.text;
+
+  }
+  String BidPropranol(double dailyproponol) {
+    BIdproponoldose = dailyproponol/2;
+    BIdproponol.text = (BIdproponoldose).toStringAsFixed(2) +
+        "mg/dose"; // handle null and String
+    return BIdproponol.text;
+  }
+  String calcTotalVolumeDisperse(double dailyproponol , int days) {
+    totalvolumetodisperse =dailyproponol  * days;
+    TotalVolumeToDisperse.text = (totalvolumetodisperse).toStringAsFixed(2) +
+        "mg/dose"; // handle null and String
+    return TotalVolumeToDisperse.text;
   }
 
 
@@ -102,47 +122,26 @@ String dropdownvalue="3.75";
           body: SingleChildScrollView(
             child: Column(
               children: [
+
                 //drug concentration need
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
-                    focusNode: myFocusNode,
-                    controller: concentrationNeededText,
-                    readOnly: true,
+                    keyboardType:
+                    const TextInputType.numberWithOptions(decimal: false),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.indigo, width: 2.0),
-                      ),
                       labelText: "Drug Concentration Needed (mg/kg/dose)",
                       hintText: "0mg/kg/dose",
                     ),
-                  ),
-                ),
-                //drug concentration need
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 5, right: 5, top: 5, bottom: 0),
-                  child: Slider(
-                    value: concentrationNeeded,
-                    min: 0.0,
-                    max: 1.0,
-                    divisions: 10,
-                    label: concentrationNeeded.toString(),
-                    onChanged: (value) {
-                      myFocusNode.requestFocus();
-                      setState(() {
-                        concentrationNeeded = value;
-                        concentrationNeededText.text =
-                        (concentrationNeeded.toString() + "mg/kg/dose");
-
-                      });
-                    },
+                      onChanged: (value){
+                        final output = double.tryParse(value);
+                        setState((){
+                          concentrationNeeded=output ?? 0;
+                          concentrationNeededText.text= (concentrationNeeded.toString() + "mg/kg/dose");
+                        });
+                      }
                   ),
                 ),
 
@@ -220,6 +219,10 @@ String dropdownvalue="3.75";
                           onChanged: (newValue) {
                             setState(() {
                                dropdownvalue = newValue!;
+                               final tryParse = double.tryParse(dropdownvalue);
+                               finalDropdown=tryParse ?? 0;
+                               DailyRequired(totalDoseNeeded, finalDropdown);
+                               BidPropranol(DailyPropanolol);
                             });
                           },
                         ),
@@ -230,7 +233,7 @@ String dropdownvalue="3.75";
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
-                    controller: numMgText,
+                    controller: DailyPropanololrequired,
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -245,6 +248,7 @@ String dropdownvalue="3.75";
                       labelText: "Daily Propranolol Required (mL)",
                       hintText: '0.00mL',
                       labelStyle: TextStyle(color: Colors.purple),
+
                     ),
                   ),
                 ),
@@ -253,7 +257,7 @@ String dropdownvalue="3.75";
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
-                    controller: numMgText,
+                    controller: BIdproponol,
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -284,6 +288,13 @@ String dropdownvalue="3.75";
                         labelText: "Number of Days of Treatment",
                         hintText: "Number of Days of Treatment",
                       ),
+                      onChanged: (value){
+                        final output = int.tryParse(value);
+                        setState(() {
+                          days=output ?? 0;
+                          calcTotalVolumeDisperse(DailyPropanolol,days);
+                        });
+                      }
                      ),
                 ),
 
@@ -292,7 +303,7 @@ String dropdownvalue="3.75";
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
-                    controller: numMgText,
+                    controller: TotalVolumeToDisperse,
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
