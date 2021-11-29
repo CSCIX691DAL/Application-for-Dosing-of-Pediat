@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -32,10 +34,10 @@ class _Med7State extends State<Med7> {
   double finalDropdown=0;
   double totalvolumetodisperse=0;
   int days=0;
-  List<String> PropranololConcentration = ["3.75", "4.28", "5"];
+  List<String> PropranololConcentration = ["0","3.75", "4.28", "5"];
 
   int mgPerTablet = 10;
-String dropdownvalue="3.75";
+String dropdownvalue="0";
   // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
 
@@ -194,7 +196,7 @@ String dropdownvalue="3.75";
                         labelStyle: TextStyle(color: Colors.purple)),
                   ),
                 ),
-                //
+                //concentration:drop down
                 Padding(
                     padding: const EdgeInsets.only(
                         left: 20, right: 20, top: 30, bottom: 0),
@@ -218,11 +220,13 @@ String dropdownvalue="3.75";
                           }).toList(),
                           onChanged: (newValue) {
                             setState(() {
+                              if(newValue=="0"){
+                               }else{
                                dropdownvalue = newValue!;
                                final tryParse = double.tryParse(dropdownvalue);
                                finalDropdown=tryParse ?? 0;
                                DailyRequired(totalDoseNeeded, finalDropdown);
-                               BidPropranol(DailyPropanolol);
+                               BidPropranol(DailyPropanolol);}
                             });
                           },
                         ),

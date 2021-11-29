@@ -41,8 +41,8 @@ class _Med8State extends State<Med8>{
   double drugRequiredT2 = 0;
   int numDaysTreatmentT2 = 0;
 double  dosesPerDayT2=0;
-  List<String> HydroxyzineConcentration = ["10","5"];
-  String dropdownvalue="10";
+  List<String> HydroxyzineConcentration = ["0","10","5"];
+  String dropdownvalue="0";
   double finalDropdown=0;
   double finalDropdown2=0;
 
@@ -253,11 +253,14 @@ double  dosesPerDayT2=0;
                                       }).toList(),
                                       onChanged: (newValue) {
                                         setState(() {
-                                          dropdownvalue = newValue!;
-                                         final tryParse = double.tryParse(dropdownvalue);
-                                         finalDropdown=tryParse ?? 0;
-                                          totalDrugNMLT1(totalDoseNeededMgT1,finalDropdown);
-                                          
+                                          if(newValue=="0"){}else {
+                                            dropdownvalue = newValue!;
+                                            final tryParse = double.tryParse(
+                                                dropdownvalue);
+                                            finalDropdown = tryParse ?? 0;
+                                            totalDrugNMLT1(totalDoseNeededMgT1,
+                                                finalDropdown);
+                                          }
                                         });
                                       },
                                     ),
