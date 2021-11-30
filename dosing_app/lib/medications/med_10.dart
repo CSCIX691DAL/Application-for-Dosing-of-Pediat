@@ -87,10 +87,8 @@ class _Med10State extends State<Med10> {
 
   String dispenseLabelT2() {
     if (drugConcentrationIntT2(drugConcentrationT2) == 10) {
-      unitT2 = 'mg';
       return "Total mg to Dispense";
     } else {
-      unitT2 = 'mL';
       return "Total Volume to Dispense (mL)";
     }
   }
