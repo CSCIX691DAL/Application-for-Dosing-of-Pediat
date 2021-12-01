@@ -119,6 +119,13 @@ class _Med9State extends State<Med9> {
     doseRemaining180mgText.text =
         (doseRemaining180mg).toStringAsFixed(2) + "mg";
   }
+<<<<<<< HEAD
+}
+
+class formFieldContainer extends StatelessWidget {
+  final String formTitle;
+=======
+>>>>>>> 08cc7eb58639b1a7d3fd228bef1470ed06596c6f
 
   void calcDaysRemaining120mg() {
     daysRemaining120mg = doseRemaining120mg / dosePerDay;
@@ -166,6 +173,34 @@ class _Med9State extends State<Med9> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
+              child: Text(
+                formTitle,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: "Enter Value",
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Colors.purple.shade900, width: 3),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(30),
+=======
     Map medication = widget.medications[widget.index];
     bool isFavourited = widget.favMedications.contains(medication);
 
@@ -228,6 +263,7 @@ class _Med9State extends State<Med9> {
                       labelText: "Concentration Needed (mg/kg/dose)",
                       hintText: "0mg/kg/dose",
                     ),
+>>>>>>> 08cc7eb58639b1a7d3fd228bef1470ed06596c6f
                   ),
                 ),
 
@@ -467,6 +503,60 @@ class _Med9State extends State<Med9> {
                           totalPriorDose2Text.text =
                               (totalPriorDose2).toStringAsFixed(2) + "mg";
 
+<<<<<<< HEAD
+  // final String listTitle;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
+              child: Text(
+                widget.listTitle,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.purple.shade900, width: 3),
+              ),
+              child: DropdownButtonHideUnderline(
+                //hides the underline in the text
+                child: DropdownButton<String>(
+                  value: value,
+                  iconSize: 36,
+                  icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                  items: items.map(buildMenuItem).toList(),
+                  isExpanded: true,
+                  onChanged: (value) => setState(() => this.value = value),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      );
+=======
                           calcTotalCumulativeDose();
                           calcDoseRemaining120mg();
                           calcDoseRemaining150mg();
@@ -734,4 +824,5 @@ class _Med9State extends State<Med9> {
           ),
         ));
   }
+>>>>>>> 08cc7eb58639b1a7d3fd228bef1470ed06596c6f
 }
