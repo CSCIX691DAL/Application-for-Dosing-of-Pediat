@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class Med9 extends StatefulWidget {
   Med9(
       {Key? key,
-        required this.index,
-        required this.medications,
-        required this.favMedications})
+      required this.index,
+      required this.medications,
+      required this.favMedications})
       : super(key: key);
   dynamic index;
   dynamic medications;
@@ -64,6 +64,7 @@ class _Med9State extends State<Med9> {
     );
   }
 }
+
 class formFieldContainer extends StatelessWidget {
   final String formTitle;
 
@@ -94,7 +95,7 @@ class formFieldContainer extends StatelessWidget {
                 hintText: "Enter Value",
                 enabledBorder: OutlineInputBorder(
                   borderSide:
-                  BorderSide(color: Colors.purple.shade900, width: 3),
+                      BorderSide(color: Colors.purple.shade900, width: 3),
                   borderRadius: BorderRadius.all(
                     Radius.circular(30),
                   ),
@@ -165,7 +166,7 @@ class _dropDownListState extends State<dropDownList> {
                   icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                   items: items.map(buildMenuItem).toList(),
                   isExpanded: true,
-                  //onChanged: (value) => setState(() => this.value = value),
+                  onChanged: (value) => setState(() => this.value = value),
                 ),
               ),
             ),
@@ -176,10 +177,10 @@ class _dropDownListState extends State<dropDownList> {
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
-    value: item,
-    child: Text(
-      item,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-    ),
-  );
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      );
 }
