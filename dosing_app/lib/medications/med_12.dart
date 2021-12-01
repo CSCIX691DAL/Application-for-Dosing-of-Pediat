@@ -207,9 +207,9 @@ class _Med12State extends State<Med12> {
     }
   }
 
-  //TODO: fix calculation to use numDaysTreatment
   void calcCapsulesToDispenseT1() {
-    capsulesToDispenseT1 = ((dosageNeededT1 / 250) * 2).ceil();
+    capsulesToDispenseT1 =
+        ((dosageNeededT1 / 250) * 2).ceil() * numDaysTreatmentT1;
     if (capsulesToDispenseT1.isNaN || capsulesToDispenseT1.isInfinite) {
       capsulesToDispenseT1Text.text = (0).toStringAsFixed(2) + " capsules";
     } else {

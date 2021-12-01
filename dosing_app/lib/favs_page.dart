@@ -1,6 +1,7 @@
 import 'dart:ui';
-
+import 'package:dosing_app/all_page.dart';
 import 'package:flutter/material.dart';
+import 'home_page.dart';
 
 class FavouritesPage extends StatefulWidget {
   FavouritesPage(
@@ -15,6 +16,58 @@ class FavouritesPage extends StatefulWidget {
 
 class _FavouritesPageState extends State<FavouritesPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Widget _buildFavPage(BuildContext context) {
+    if (widget.favMedications.isEmpty) {
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Padding(
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 30),
+                child: Text(
+                  "You haven't favorited any medications yet! Visit the all page to see all medications.",
+                  textAlign: TextAlign.center,
+                )),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) => HomePage(
+                      medications: widget.medications,
+                      favMedications: widget.favMedications,
+                    ),
+                    transitionDuration: Duration.zero,
+                  ),
+                );
+              },
+              child: const Text('All Medications'),
+            )
+          ]);
+    } else {
+      return ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: widget.favMedications.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+              child: ListTile(
+                leading: Image.asset(widget.medications[index]['imagePath'],
+                    width: 100),
+                title: Text(widget.favMedications[index]['name'].toString()),
+                subtitle: Text(
+                    widget.favMedications[index]['description'].toString()),
+                isThreeLine: true,
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, widget.favMedications[index]['route']);
+                },
+              ),
+            );
+          });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,27 +139,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
             ],
           ),
         ),
-        body: Center(
-          child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: widget.favMedications.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  child: ListTile(
-                    leading: Image.asset(widget.medications[index]['imagePath'],
-                        width: 100),
-                    title:
-                        Text(widget.favMedications[index]['name'].toString()),
-                    subtitle: Text(
-                        widget.favMedications[index]['description'].toString()),
-                    isThreeLine: true,
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, widget.favMedications[index]['route']);
-                    },
-                  ),
-                );
-              }),
-        ));
+        body: Center(child: _buildFavPage(context)));
   }
 }

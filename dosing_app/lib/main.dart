@@ -5,10 +5,15 @@ import 'medications/med_1.dart';
 import 'medications/med_2.dart';
 import 'medications/med_3.dart';
 import 'medications/med_5.dart';
+import 'medications/med_6.dart';
 import 'medications/med_9.dart';
+import 'medications/med_10.dart';
 import 'medications/med_11.dart';
 import 'medications/med_12.dart';
+import 'medications/med_13.dart';
+import 'medications/med_14.dart';
 import 'medications/med_15.dart';
+import 'medications/med_17.dart';
 
 void main() {
   // myApp was const
@@ -156,8 +161,16 @@ class MyApp extends StatelessWidget {
               index: 4,
               medications: medications,
               favMedications: favMedications),
+          '/med6': (context) => Med6(
+              index: 5,
+              medications: medications,
+              favMedications: favMedications),
           '/med9': (context) => Med9(
               index: 8,
+              medications: medications,
+              favMedications: favMedications),
+          '/med10': (context) => Med10(
+              index: 9,
               medications: medications,
               favMedications: favMedications),
           '/med11': (context) => Med11(
@@ -168,8 +181,20 @@ class MyApp extends StatelessWidget {
               index: 11,
               medications: medications,
               favMedications: favMedications),
+          '/med13': (context) => Med13(
+              index: 12,
+              medications: medications,
+              favMedications: favMedications),
+          '/med14': (context) => Med14(
+              index: 13,
+              medications: medications,
+              favMedications: favMedications),
           '/med15': (context) => Med15(
               index: 14,
+              medications: medications,
+              favMedications: favMedications),
+          '/med17': (context) => Med17(
+              index: 16,
               medications: medications,
               favMedications: favMedications),
         }
