@@ -8,6 +8,7 @@ import 'medications/med_5.dart';
 import 'medications/med_9.dart';
 import 'medications/med_11.dart';
 import 'medications/med_15.dart';
+import 'medications/med_16.dart';
 
 void main() {
   // myApp was const
@@ -165,6 +166,10 @@ class MyApp extends StatelessWidget {
               favMedications: favMedications),
           '/med15': (context) => Med15(
               index: 14,
+              medications: medications,
+              favMedications: favMedications),
+          '/med16': (context) => Med16(
+              index: 15,
               medications: medications,
               favMedications: favMedications),
         }
