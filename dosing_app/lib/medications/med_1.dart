@@ -113,51 +113,28 @@ class _Med1State extends State<Med1> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                // Concentration needed output field
+                // Drug concentration input field
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 0),
+                      left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
-                    focusNode: myFocusNode,
-                    controller: concentrationNeededText,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Concentration Needed (mg/kg/dose)",
+                        hintText: "Concentration Needed (mg/kg/dose)",
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.indigo, width: 2.0),
-                      ),
-                      labelText: "Concentration Needed (mg/kg/dose)",
-                      hintText: "0mg/kg/dose",
-                    ),
-                  ),
-                ),
-
-                // Drug concentration needed slider
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 5, right: 5, top: 5, bottom: 0),
-                  child: Slider(
-                    value: concentrationNeeded,
-                    min: 0.0,
-                    max: 1.0,
-                    divisions: 10,
-                    label: concentrationNeeded.toString(),
-                    onChanged: (value) {
-                      myFocusNode.requestFocus();
-                      setState(() {
-                        concentrationNeeded = value;
-                        concentrationNeededText.text =
-                            (concentrationNeeded.toString() + "mg/kg/dose");
-                        calcTotalDosageNeeded();
-                        calcNumMg();
-                        calcNumTabsNeeded();
-                      });
-                    },
-                  ),
+                      onChanged: (value) {
+                        final x = double.tryParse(value);
+                        setState(() {
+                          concentrationNeeded =
+                              x ?? 0; // handle null and String
+                          calcTotalDosageNeeded();
+                          calcNumMg();
+                          calcNumTabsNeeded();
+                        });
+                      }),
                 ),
 
                 // Child's weight input field
@@ -176,23 +153,9 @@ class _Med1State extends State<Med1> {
                         final x = double.tryParse(value);
                         setState(() {
                           childWeight = x ?? 0; // handle null and String
-                          totalDoseNeeded = concentrationNeeded * childWeight;
-                          totalDoseNeededText.text =
-                              (totalDoseNeeded).toStringAsFixed(2) + "mg/dose";
-                          numMg = totalDoseNeeded * numDaysTreatment;
-                          if (numMg.isNaN || numMg.isInfinite) {
-                            numMgText.text = (0).toStringAsFixed(2) + "mg";
-                          } else {
-                            numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-                          }
-                          numTabsNeeded = (numMg / mgPerTablet).ceil();
-                          if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-                            numTabsNeededText.text =
-                                (0).toString() + " tablets";
-                          } else {
-                            numTabsNeededText.text =
-                                (numTabsNeeded).toString() + " tablets";
-                          }
+                          calcTotalDosageNeeded();
+                          calcNumMg();
+                          calcNumTabsNeeded();
                         });
                       }),
                 ),
