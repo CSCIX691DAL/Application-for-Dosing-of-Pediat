@@ -7,6 +7,7 @@ import 'medications/med_3.dart';
 import 'medications/med_5.dart';
 import 'medications/med_6.dart';
 import 'medications/med_7.dart';
+import 'medications/med_8.dart';
 import 'medications/med_9.dart';
 import 'medications/med_10.dart';
 import 'medications/med_11.dart';
@@ -168,6 +169,10 @@ class MyApp extends StatelessWidget {
               favMedications: favMedications),
           '/med7': (context) => Med7(
               index: 6,
+              medications: medications,
+              favMedications: favMedications),
+          '/med8': (context) => Med8(
+              index: 7,
               medications: medications,
               favMedications: favMedications),
           '/med9': (context) => Med9(
