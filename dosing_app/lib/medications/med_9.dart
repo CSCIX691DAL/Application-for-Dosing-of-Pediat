@@ -104,36 +104,54 @@ class _Med9State extends State<Med9> {
 
   void calcDoseRemaining120mg() {
     doseRemaining120mg = doseNeeded120mg - totalCumulativeDose;
+    if(doseRemaining120mg < 0){
+      doseRemaining120mg = 0;
+    }
     doseRemaining120mgText.text =
         (doseRemaining120mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDoseRemaining150mg() {
     doseRemaining150mg = doseNeeded150mg - totalCumulativeDose;
+    if(doseRemaining150mg < 0){
+      doseRemaining150mg = 0;
+    }
     doseRemaining150mgText.text =
         (doseRemaining150mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDoseRemaining180mg() {
     doseRemaining180mg = doseNeeded180mg - totalCumulativeDose;
+    if(doseRemaining180mg < 0){
+      doseRemaining180mg = 0;
+    }
     doseRemaining180mgText.text =
         (doseRemaining180mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDaysRemaining120mg() {
     daysRemaining120mg = doseRemaining120mg / dosePerDay;
+    if(daysRemaining120mg < 0){
+      daysRemaining120mg = 0;
+    }
     daysRemaining120mgText.text =
         (daysRemaining120mg).toStringAsFixed(0) + " days";
   }
 
   void calcDaysRemaining150mg() {
     daysRemaining150mg = doseRemaining150mg / dosePerDay;
+    if(daysRemaining150mg < 0){
+      daysRemaining150mg = 0;
+    }
     daysRemaining150mgText.text =
         (daysRemaining150mg).toStringAsFixed(0) + " days";
   }
 
   void calcDaysRemaining180mg() {
     daysRemaining180mg = doseRemaining180mg / dosePerDay;
+    if(daysRemaining180mg < 0){
+      daysRemaining180mg = 0;
+    }
     daysRemaining180mgText.text =
         (daysRemaining180mg).toStringAsFixed(0) + " days";
   }
