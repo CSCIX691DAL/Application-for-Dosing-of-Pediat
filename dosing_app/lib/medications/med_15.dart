@@ -31,7 +31,8 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
   double drugConcentrationT1 = 0;
   int dosesPerDayT1 = 0;
   double mgPerDoseT1 = 0;
-  double mgPerTabletT1 = 0;
+  int mgPerTabletT1 = 1;
+  List<int> mgPerTabletItemsT1 = [1, 5];
   double numTabletsPerDoseT1 = 0;
   int numDaysTreatmentT1 = 0;
   int tabletsToDispenseT1 = 0;
@@ -43,7 +44,8 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
 
   double drugConcentrationNeededT2 = 0;
   double mgPerDoseT2 = 0;
-  double mgPerTabletT2 = 0;
+  int mgPerTabletT2 = 1;
+  List<int> mgPerTabletItemsT2 = [1, 5];
   double numTabletsPerDoseT2 = 0;
   int dosesPerDayT2 = 0;
   int numDaysTreatmentT2 = 0;
@@ -356,28 +358,39 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
                           ),
                         ),
 
-                        // Number of mg per tablet
+                        // Drug concentration dropdown
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 0),
-                          child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: false),
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: InputDecorator(
                               decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "mg per Tablet",
-                                hintText: "mg per Tablet",
+                                  border: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Number of mg/tablet"),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  // hint: Text('Please choose a location'),
+                                  isExpanded: true,
+                                  value: mgPerTabletT1,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      mgPerTabletT1 = newValue!;
+                                      calcTabletsPerDoseT1();
+                                      calcTabletsToDispenseT1();
+                                    });
+                                  },
+                                  items: mgPerTabletItemsT1.map((value) {
+                                    return DropdownMenuItem(
+                                      child: Text(value.toString() + "mg"),
+                                      value: value,
+                                    );
+                                  }).toList(),
+                                ),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  mgPerTabletT1 = x ?? 0;
-                                  calcTabletsPerDoseT1();
-                                  calcTabletsToDispenseT1();
-                                });
-                              }),
-                        ),
+                            )),
 
                         // Tablets per dose output
                         Padding(
@@ -555,28 +568,39 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
                           ),
                         ),
 
-                        // Number of mg per tablet
+                        // Drug concentration dropdown
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 0),
-                          child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: false),
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: InputDecorator(
                               decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "mg per Tablet",
-                                hintText: "mg per Tablet",
+                                  border: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Number of mg/tablet"),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  // hint: Text('Please choose a location'),
+                                  isExpanded: true,
+                                  value: mgPerTabletT2,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      mgPerTabletT2 = newValue!;
+                                      calcTabletsPerDoseT2();
+                                      calcTabletsToDispenseT2();
+                                    });
+                                  },
+                                  items: mgPerTabletItemsT2.map((value) {
+                                    return DropdownMenuItem(
+                                      child: Text(value.toString() + "mg"),
+                                      value: value,
+                                    );
+                                  }).toList(),
+                                ),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  mgPerTabletT2 = x ?? 0;
-                                  calcTabletsPerDoseT2();
-                                  calcTabletsToDispenseT2();
-                                });
-                              }),
-                        ),
+                            )),
 
                         // Tablets per dose output
                         Padding(
