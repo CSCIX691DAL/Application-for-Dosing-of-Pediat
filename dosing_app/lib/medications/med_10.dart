@@ -77,8 +77,12 @@ class _Med10State extends State<Med10> {
 
   void calcVolumeToDispenseT1() {
     volumeToDispenseT1 = drugRequiredT1 * numDaysTreatmentT1;
-    volumeToDispenseT1Text.text =
-        (volumeToDispenseT1).toStringAsFixed(2) + "mL";
+    if (volumeToDispenseT1.isNaN || volumeToDispenseT1.isInfinite) {
+      volumeToDispenseT1Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      volumeToDispenseT1Text.text =
+          (volumeToDispenseT1).toStringAsFixed(2) + "mL";
+    }
   }
 
   int drugConcentrationIntT2(drugConcentration) {
@@ -106,8 +110,13 @@ class _Med10State extends State<Med10> {
 
   void calcVolumeToDispenseT2() {
     volumeToDispenseT2 = drugRequiredT2 * dosesPerDayT2 * numDaysTreatmentT2;
-    volumeToDispenseT2Text.text =
-        (volumeToDispenseT2).toStringAsFixed(2) + "mL";
+    if (drugConcentrationT2 == '10mg (Capsule)') {
+      volumeToDispenseT2Text.text =
+          (volumeToDispenseT2).toStringAsFixed(2) + "mg";
+    } else {
+      volumeToDispenseT2Text.text =
+          (volumeToDispenseT2).toStringAsFixed(2) + "mL";
+    }
   }
 
   @override
