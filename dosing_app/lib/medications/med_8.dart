@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class Med10 extends StatefulWidget {
-  Med10(
+class Med8 extends StatefulWidget {
+  Med8(
       {Key? key,
       required this.index,
       required this.medications,
@@ -15,11 +15,13 @@ class Med10 extends StatefulWidget {
   dynamic favMedications;
 
   @override
-  _Med10State createState() => _Med10State();
+  _Med8State createState() => _Med8State();
 }
 
-class _Med10State extends State<Med10> {
+class _Med8State extends State<Med8> {
   TextEditingController totalDoseNeededMgT1Text = TextEditingController();
+  TextEditingController totalDoseNeededMlT1Text = TextEditingController();
+  TextEditingController dosesPerDayT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
   TextEditingController volumeToDispenseT1Text = TextEditingController();
 
@@ -30,20 +32,23 @@ class _Med10State extends State<Med10> {
   double concentrationNeededT1 = 0;
   double childWeightT1 = 0;
   double totalDoseNeededMgT1 = 0;
-  double drugConcentrationT1 = 0;
+  double totalDoseNeededMlT1 = 0;
+  int dosesPerDayT1 = 0;
   double drugRequiredT1 = 0;
   int numDaysTreatmentT1 = 0;
   double volumeToDispenseT1 = 0;
+
+  List<int> drugConcentrationT1Items = [10];
+  int drugConcentrationT1 = 10;
 
   double concentrationNeededT2 = 0;
   double drugRequiredT2 = 0;
   int dosesPerDayT2 = 0;
   int numDaysTreatmentT2 = 0;
   double volumeToDispenseT2 = 0;
-  String unitT2 = 'mg';
 
-  List<String> drugConcentrationT2Items = ['10mg (Capsule)', '100mg/mL'];
-  String drugConcentrationT2 = '10mg (Capsule)';
+  List<int> drugConcentrationT2Items = [10];
+  int drugConcentrationT2 = 10;
 
   late FocusNode myFocusNode;
 
@@ -66,8 +71,18 @@ class _Med10State extends State<Med10> {
         (totalDoseNeededMgT1).toStringAsFixed(2) + "mg/dose";
   }
 
+  void calcDosageNeededMlT1() {
+    totalDoseNeededMlT1 = totalDoseNeededMgT1 / (drugConcentrationT1 / 5);
+    if (totalDoseNeededMlT1.isNaN || totalDoseNeededMlT1.isInfinite) {
+      totalDoseNeededMlT1Text.text = (0).toStringAsFixed(2) + "mL";
+    } else {
+      totalDoseNeededMlT1Text.text =
+          (totalDoseNeededMlT1).toStringAsFixed(2) + "mL";
+    }
+  }
+
   void calcDrugRequiredT1() {
-    drugRequiredT1 = totalDoseNeededMgT1 / drugConcentrationT1;
+    drugRequiredT1 = totalDoseNeededMlT1 / dosesPerDayT1;
     if (drugRequiredT1.isNaN || drugRequiredT1.isInfinite) {
       drugRequiredT1Text.text = (0).toStringAsFixed(2) + "mL/dose";
     } else {
@@ -81,21 +96,8 @@ class _Med10State extends State<Med10> {
         (volumeToDispenseT1).toStringAsFixed(2) + "mL";
   }
 
-  int drugConcentrationIntT2(drugConcentration) {
-    return int.parse(drugConcentration.split("m")[0]);
-  }
-
-  String dispenseLabelT2() {
-    if (drugConcentrationIntT2(drugConcentrationT2) == 10) {
-      return "Total mg to Dispense";
-    } else {
-      return "Total Volume to Dispense (mL)";
-    }
-  }
-
   void calcDrugRequiredT2() {
-    drugRequiredT2 =
-        concentrationNeededT2 / drugConcentrationIntT2(drugConcentrationT2);
+    drugRequiredT2 = concentrationNeededT2 / (drugConcentrationT2 / 5);
 
     if (drugRequiredT2.isNaN || drugRequiredT2.isInfinite) {
       drugRequiredT2Text.text = (0).toStringAsFixed(2) + "mL/dose";
@@ -151,7 +153,7 @@ class _Med10State extends State<Med10> {
                   ],
                   bottom: const TabBar(
                     tabs: [
-                      Tab(text: "mg/kg/dose"),
+                      Tab(text: "mg/kg/day"),
                       Tab(text: "mg/dose"),
                     ],
                   ),
@@ -173,14 +175,15 @@ class _Med10State extends State<Med10> {
                                       decimal: true),
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: "Concentration Needed (mg/kg/dose)",
-                                hintText: "Concentration Needed (mg/kg/dose)",
+                                labelText: "Concentration Needed (mg/kg/day)",
+                                hintText: "Concentration Needed (mg/kg/day)",
                               ),
                               onChanged: (value) {
                                 final x = double.tryParse(value);
                                 setState(() {
                                   concentrationNeededT1 = x ?? 0;
                                   calcDosageNeededMgT1();
+                                  calcDosageNeededMlT1();
                                   calcDrugRequiredT1();
                                   calcVolumeToDispenseT1();
                                 });
@@ -205,6 +208,7 @@ class _Med10State extends State<Med10> {
                                 setState(() {
                                   childWeightT1 = x ?? 0;
                                   calcDosageNeededMgT1();
+                                  calcDosageNeededMlT1();
                                   calcDrugRequiredT1();
                                   calcVolumeToDispenseT1();
                                 });
@@ -234,27 +238,116 @@ class _Med10State extends State<Med10> {
                           ),
                         ),
 
-                        // Drug concentration
+                        //Drug concentration dropdown
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 0),
+                            child: InputDecorator(
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.purple, width: 2.0),
+                                  ),
+                                  labelText: "Drug Concentration mg/mL"),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  // hint: Text('Please choose a location'),
+                                  isExpanded: true,
+                                  value: drugConcentrationT1,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      drugConcentrationT1 = newValue!;
+                                      calcDosageNeededMlT1();
+                                      calcDrugRequiredT1();
+                                      calcVolumeToDispenseT1();
+                                    });
+                                  },
+                                  items: drugConcentrationT1Items.map((value) {
+                                    return DropdownMenuItem(
+                                      child: Text(value.toString() + "mg/5ml"),
+                                      value: value,
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            )),
+
+                        // Total dosage needed (ml) output field
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: const InputDecoration(
+                            controller: totalDoseNeededMlT1Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: "Drug Concentration (mg/mL)",
-                                hintText: "Drug Concentration (mg/mL)",
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Total Dosage Needed (mL)",
+                                hintText: "0mL",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // doses per day slider output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            focusNode: myFocusNode,
+                            controller: dosesPerDayT1Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1.0),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  drugConcentrationT1 = x ?? 0;
-                                  calcDrugRequiredT1();
-                                  calcVolumeToDispenseT1();
-                                });
-                              }),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.indigo, width: 2.0),
+                              ),
+                              labelText: "Doses per Day",
+                              hintText: "0 doses per day",
+                            ),
+                          ),
+                        ),
+
+                        // doses per day slider
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 0),
+                          child: Slider(
+                            value: dosesPerDayT1.toDouble(),
+                            min: 0.0,
+                            max: 5.0,
+                            divisions: 5,
+                            label: dosesPerDayT1.toString(),
+                            onChanged: (value) {
+                              myFocusNode.requestFocus();
+                              setState(() {
+                                dosesPerDayT1 = value.toInt();
+                                if (dosesPerDayT1 == 1) {
+                                  dosesPerDayT1Text.text =
+                                      (dosesPerDayT1.toString() +
+                                          " dose per day");
+                                } else {
+                                  dosesPerDayT1Text.text =
+                                      (dosesPerDayT1.toString() +
+                                          " doses per day");
+                                }
+                                calcDrugRequiredT1();
+                                calcVolumeToDispenseT1();
+                              });
+                            },
+                          ),
                         ),
 
                         // Drug required
@@ -375,7 +468,7 @@ class _Med10State extends State<Med10> {
                                   ),
                                   labelText: "Drug Concentration mg/mL"),
                               child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
+                                child: DropdownButton<int>(
                                   // hint: Text('Please choose a location'),
                                   isExpanded: true,
                                   value: drugConcentrationT2,
@@ -388,7 +481,7 @@ class _Med10State extends State<Med10> {
                                   },
                                   items: drugConcentrationT2Items.map((value) {
                                     return DropdownMenuItem(
-                                      child: Text(value),
+                                      child: Text(value.toString() + "mg/5ml"),
                                       value: value,
                                     );
                                   }).toList(),
@@ -509,20 +602,19 @@ class _Med10State extends State<Med10> {
                           child: TextField(
                             controller: volumeToDispenseT2Text,
                             readOnly: true,
-                            decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                enabledBorder: const OutlineInputBorder(
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: dispenseLabelT2(),
-                                hintText: "0" + unitT2,
-                                labelStyle:
-                                    const TextStyle(color: Colors.purple)),
+                                labelText: "Total Volume to Dispense (mL)",
+                                hintText: "0mL",
+                                labelStyle: TextStyle(color: Colors.purple)),
                           ),
                         ),
                       ],

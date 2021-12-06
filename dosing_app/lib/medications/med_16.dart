@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class Med1 extends StatefulWidget {
-  Med1(
+class Med16 extends StatefulWidget {
+  Med16(
       {Key? key,
       required this.index,
       required this.medications,
@@ -15,23 +15,24 @@ class Med1 extends StatefulWidget {
   dynamic favMedications;
 
   @override
-  _Med1State createState() => _Med1State();
+  _Med16State createState() => _Med16State();
 }
 
-class _Med1State extends State<Med1> {
+class _Med16State extends State<Med16> {
   TextEditingController concentrationNeededText = TextEditingController();
-  TextEditingController totalDoseNeededText = TextEditingController();
-  TextEditingController numMgText = TextEditingController();
-  TextEditingController numTabsNeededText = TextEditingController();
+  TextEditingController dosePerTabletText = TextEditingController();
+  TextEditingController tabletsPerDayText = TextEditingController();
+  TextEditingController tabletsDispenseText = TextEditingController();
 
-  double concentrationNeeded = 0;
   double childWeight = 0;
-  double totalDoseNeeded = 0;
-  double numDaysTreatment = 0;
-  double numMg = 0;
+  double drugConcentration = 0;
+  double dosePerTablet =250;
+  double tabletsPerDay = 0;
+  double daysTreatment = 0;
+  double tabletsDispense = 0;
   int numTabsNeeded = 0;
 
-  List<int> mgPerTabletItems = [10, 25];
+
   int mgPerTablet = 10;
 
   // Handle closing the keyboard when use taps anywhere else on the screen
@@ -50,24 +51,37 @@ class _Med1State extends State<Med1> {
   }
 
   // Functions for each output field
-  void calcTotalDosageNeeded() {
-    totalDoseNeeded = concentrationNeeded * childWeight;
-    totalDoseNeededText.text = (totalDoseNeeded).toStringAsFixed(2) +
-        "mg/dose"; // handle null and String
-  }
-
-  void calcNumMg() {
-    numMg = totalDoseNeeded * numDaysTreatment;
-    numMgText.text = (numMg).toStringAsFixed(2) + "mg";
-  }
-
-  void calcNumTabsNeeded() {
-    numTabsNeeded = (numMg / mgPerTablet).ceil();
-    if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-      numTabsNeededText.text = (0).toString() + " tablets";
-    } else {
-      numTabsNeededText.text = (numTabsNeeded).toString() + " tablets";
+  void calcDrugConcentration() {
+    if(childWeight >= 10 && childWeight <= 19.99){
+      drugConcentration = 62.5;
     }
+    else if(childWeight >= 20 && childWeight <= 39.99){
+      drugConcentration = 125;
+    }
+    else{
+      drugConcentration = 250;
+    }
+    concentrationNeededText.text = (drugConcentration).toStringAsFixed(2) +
+        "mg/day"; // handle null and String
+  }
+
+  void calcDosePerTablet() {
+    dosePerTabletText.text = (dosePerTablet).toStringAsFixed(0) +
+        "mg"; // handle null and String
+  }
+
+  void calcTabletsPerDay() {
+    tabletsPerDay = drugConcentration/dosePerTablet;
+
+    tabletsPerDayText.text = (tabletsPerDay).toStringAsFixed(2) +
+    " tablet(s)"; // handle null and String
+  }
+
+  void calcTabletsToDispense() {
+    tabletsDispense = tabletsPerDay*daysTreatment;
+
+    tabletsDispenseText.text = (tabletsDispense).toStringAsFixed(0) +
+        " tablet(s)"; // handle null and String
   }
 
   @override
@@ -113,37 +127,14 @@ class _Med1State extends State<Med1> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                // Drug concentration input field
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 20, bottom: 0),
-                  child: TextField(
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Concentration Needed (mg/kg/dose)",
-                        hintText: "Concentration Needed (mg/kg/dose)",
-                      ),
-                      onChanged: (value) {
-                        final x = double.tryParse(value);
-                        setState(() {
-                          concentrationNeeded =
-                              x ?? 0; // handle null and String
-                          calcTotalDosageNeeded();
-                          calcNumMg();
-                          calcNumTabsNeeded();
-                        });
-                      }),
-                ),
-
                 // Child's weight input field
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      const TextInputType.numberWithOptions(
+                          decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Child's Weight (kg)",
@@ -152,20 +143,19 @@ class _Med1State extends State<Med1> {
                       onChanged: (value) {
                         final x = double.tryParse(value);
                         setState(() {
-                          childWeight = x ?? 0; // handle null and String
-                          calcTotalDosageNeeded();
-                          calcNumMg();
-                          calcNumTabsNeeded();
+                          childWeight = x ?? 0;
+                          calcDrugConcentration();
+                          calcDosePerTablet();
+                          calcTabletsPerDay();
                         });
                       }),
                 ),
-
-                // Total dosage needed output field
+                // Drug Concentration Needed output field
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
-                    controller: totalDoseNeededText,
+                    controller: concentrationNeededText,
                     readOnly: true,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -177,97 +167,33 @@ class _Med1State extends State<Med1> {
                           borderSide:
                               BorderSide(color: Colors.purple, width: 2.0),
                         ),
-                        labelText: "Total Dosage Needed (mg/dose)",
-                        hintText: "0mg/dose",
+                        labelText: "Drug Concentration Needed (mg/day)",
+                        hintText: "0mg/day",
                         labelStyle: TextStyle(color: Colors.purple)),
                   ),
                 ),
 
-                // Number of days of treatment input field
+                // Num mg per tablet
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
-                  child: TextField(
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: false),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Number of Days of Treatment",
-                        hintText: "Number of Days of Treatment",
-                      ),
-                      onChanged: (value) {
-                        final x = double.tryParse(value);
-                        setState(() {
-                          numDaysTreatment = x ?? 0;
-                          calcNumMg();
-                          calcNumTabsNeeded();
-                        });
-                      }),
-                ),
-
-                // Total mg output field
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 0),
-                  child: TextField(
-                    controller: numMgText,
+                  child: TextFormField(
+                    initialValue:
+                    dosePerTablet.toStringAsFixed(0) + "mg",
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.purple, width: 2.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.purple, width: 2.0),
-                      ),
-                      labelText: "Total mg",
-                      hintText: '0.00mg',
-                      labelStyle: TextStyle(color: Colors.purple),
+                      labelText: "Dose per Tablet",
+                      hintText: "Dose per Tablet",
                     ),
                   ),
                 ),
-
-                // Drug concentration dropdown
-                Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 30, bottom: 0),
-                    child: InputDecorator(
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.purple, width: 2.0),
-                          ),
-                          labelText: "Number of mg/tablet"),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<int>(
-                          // hint: Text('Please choose a location'),
-                          isExpanded: true,
-                          value: mgPerTablet,
-                          onChanged: (newValue) {
-                            setState(() {
-                              mgPerTablet = newValue!;
-                              calcNumTabsNeeded();
-                            });
-                          },
-                          items: mgPerTabletItems.map((value) {
-                            return DropdownMenuItem(
-                              child: Text(value.toString() + "mg"),
-                              value: value,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    )),
-
-                // Total tablets needed output field
+                // tablets per Day output field
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 60),
+                      left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
-                    controller: numTabsNeededText,
+                    controller: tabletsPerDayText,
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -279,12 +205,58 @@ class _Med1State extends State<Med1> {
                         borderSide:
                             BorderSide(color: Colors.purple, width: 2.0),
                       ),
-                      labelText: "Total Tablets Needed",
+                      labelText: "Tablets per Day",
                       hintText: '0 tablets',
                       labelStyle: TextStyle(color: Colors.purple),
                     ),
                   ),
                 ),
+                // Days Treatment input field
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                      keyboardType:
+                      const TextInputType.numberWithOptions(
+                          decimal: true),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "# Days of Treatment",
+                        hintText: "# Days of Treatment",
+                      ),
+                      onChanged: (value) {
+                        final x = double.tryParse(value);
+                        setState(() {
+                          daysTreatment = x ?? 0;
+                          calcTabletsToDispense();
+                        });
+                      }),
+                ),
+                // Total # Tablets to Dispense output field
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 30, bottom: 0),
+                  child: TextField(
+                    controller: tabletsDispenseText,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.purple, width: 2.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.purple, width: 2.0),
+                      ),
+                      labelText: "Total # Tablets to Dispense",
+                      hintText: '0 tablets',
+                      labelStyle: TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ),
+
+
               ],
             ),
           ),

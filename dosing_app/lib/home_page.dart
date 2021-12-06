@@ -26,9 +26,6 @@ class _HomePageState extends State<HomePage> {
 
   // Change page when navbar is tapped
   void _onItemTapped(int selectedIndex) {
-    print('favs: $widget.favMedications.()');
-    print('all: $widget.medications.()');
-
     _pageController.jumpToPage(selectedIndex);
   }
 

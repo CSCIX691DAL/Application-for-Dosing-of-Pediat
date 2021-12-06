@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 class Med9 extends StatefulWidget {
   Med9(
       {Key? key,
-        required this.index,
-        required this.medications,
-        required this.favMedications})
+      required this.index,
+      required this.medications,
+      required this.favMedications})
       : super(key: key);
 
   dynamic index;
@@ -86,60 +86,75 @@ class _Med9State extends State<Med9> {
     totalCumulativeDoseText.text =
         (totalCumulativeDose).toStringAsFixed(2) + "mg";
   }
+
   void calcDoseNeeded120mg() {
     doseNeeded120mg = patientWeight * 120;
-    doseNeeded120mgText.text =
-        (doseNeeded120mg).toStringAsFixed(2) + "mg";
+    doseNeeded120mgText.text = (doseNeeded120mg).toStringAsFixed(2) + "mg";
   }
+
   void calcDoseNeeded150mg() {
     doseNeeded150mg = patientWeight * 150;
-    doseNeeded150mgText.text =
-        (doseNeeded150mg).toStringAsFixed(2) + "mg";
+    doseNeeded150mgText.text = (doseNeeded150mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDoseNeeded180mg() {
     doseNeeded180mg = patientWeight * 180;
-    doseNeeded180mgText.text =
-        (doseNeeded180mg).toStringAsFixed(2) + "mg";
+    doseNeeded180mgText.text = (doseNeeded180mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDoseRemaining120mg() {
     doseRemaining120mg = doseNeeded120mg - totalCumulativeDose;
+    if(doseRemaining120mg < 0){
+      doseRemaining120mg = 0;
+    }
     doseRemaining120mgText.text =
         (doseRemaining120mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDoseRemaining150mg() {
     doseRemaining150mg = doseNeeded150mg - totalCumulativeDose;
+    if(doseRemaining150mg < 0){
+      doseRemaining150mg = 0;
+    }
     doseRemaining150mgText.text =
         (doseRemaining150mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDoseRemaining180mg() {
     doseRemaining180mg = doseNeeded180mg - totalCumulativeDose;
+    if(doseRemaining180mg < 0){
+      doseRemaining180mg = 0;
+    }
     doseRemaining180mgText.text =
         (doseRemaining180mg).toStringAsFixed(2) + "mg";
   }
 
   void calcDaysRemaining120mg() {
     daysRemaining120mg = doseRemaining120mg / dosePerDay;
+    if(daysRemaining120mg < 0){
+      daysRemaining120mg = 0;
+    }
     daysRemaining120mgText.text =
         (daysRemaining120mg).toStringAsFixed(0) + " days";
   }
 
   void calcDaysRemaining150mg() {
     daysRemaining150mg = doseRemaining150mg / dosePerDay;
+    if(daysRemaining150mg < 0){
+      daysRemaining150mg = 0;
+    }
     daysRemaining150mgText.text =
         (daysRemaining150mg).toStringAsFixed(0) + " days";
   }
 
   void calcDaysRemaining180mg() {
     daysRemaining180mg = doseRemaining180mg / dosePerDay;
+    if(daysRemaining180mg < 0){
+      daysRemaining180mg = 0;
+    }
     daysRemaining180mgText.text =
         (daysRemaining180mg).toStringAsFixed(0) + " days";
   }
-
-
 
   void calcTotalCurrentDose() {
     totalCurrentDose = dosePerDay * durationCurrentDose;
@@ -148,7 +163,7 @@ class _Med9State extends State<Med9> {
   }
 
   void calcTotalPriorDose1() {
-    totalPriorDose1 =  priorDosePerDay1 * durationPriorDose1;
+    totalPriorDose1 = priorDosePerDay1 * durationPriorDose1;
     totalPriorDose1Text.text = (totalDoseNeeded).toStringAsFixed(2) +
         "mg/dose"; // handle null and String
   }
@@ -210,61 +225,13 @@ class _Med9State extends State<Med9> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                /*
-                // Concentration needed output field
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 0),
-                  child: TextField(
-                    focusNode: myFocusNode,
-                    controller: concentrationNeededText,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.indigo, width: 2.0),
-                      ),
-                      labelText: "Concentration Needed (mg/kg/dose)",
-                      hintText: "0mg/kg/dose",
-                    ),
-                  ),
-                ),
-
-                // Drug concentration needed slider
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 5, right: 5, top: 5, bottom: 0),
-                  child: Slider(
-                    value: concentrationNeeded,
-                    min: 0.0,
-                    max: 1.0,
-                    divisions: 10,
-                    label: concentrationNeeded.toString(),
-                    onChanged: (value) {
-                      myFocusNode.requestFocus();
-                      setState(() {
-                        concentrationNeeded = value;
-                        concentrationNeededText.text =
-                        (concentrationNeeded.toString() + "mg/kg/dose");
-                        calcTotalDosageNeeded();
-                        calcNumMg();
-                        calcNumTabsNeeded();
-                      });
-                    },
-                  ),
-                ),
-*/
                 // Patient's weight input field
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Patient's Weight (kg)",
@@ -280,7 +247,6 @@ class _Med9State extends State<Med9> {
                           calcDoseNeeded120mg();
                           calcDoseNeeded150mg();
                           calcDoseNeeded180mg();
-
                         });
                       }),
                 ),
@@ -291,7 +257,7 @@ class _Med9State extends State<Med9> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Current Dose per Day (mg)",
@@ -304,7 +270,6 @@ class _Med9State extends State<Med9> {
                           totalCurrentDose = dosePerDay * durationCurrentDose;
                           totalCurrentDoseText.text =
                               (totalCurrentDose).toStringAsFixed(2) + "mg";
-
                         });
                       }),
                 ),
@@ -314,7 +279,7 @@ class _Med9State extends State<Med9> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Duration of Current Dose (days)",
@@ -323,12 +288,11 @@ class _Med9State extends State<Med9> {
                       onChanged: (value) {
                         final x = double.tryParse(value);
                         setState(() {
-                          durationCurrentDose = x ?? 0; // handle null and String
+                          durationCurrentDose =
+                              x ?? 0; // handle null and String
                           totalCurrentDose = dosePerDay * durationCurrentDose;
                           totalCurrentDoseText.text =
-
                               (totalCurrentDose).toStringAsFixed(2) + "mg";
-
                         });
                       }),
                 ),
@@ -344,11 +308,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Current Dose (mg)",
                         hintText: "0mg",
@@ -362,7 +326,7 @@ class _Med9State extends State<Med9> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Prior Dose per Day (mg)",
@@ -372,7 +336,8 @@ class _Med9State extends State<Med9> {
                         final x = double.tryParse(value);
                         setState(() {
                           priorDosePerDay1 = x ?? 0; // handle null and String
-                          totalPriorDose1 = priorDosePerDay1 * durationPriorDose1;
+                          totalPriorDose1 =
+                              priorDosePerDay1 * durationPriorDose1;
                           totalPriorDose1Text.text =
                               (totalPriorDose1).toStringAsFixed(2) + "mg";
                           calcTotalCumulativeDose();
@@ -385,7 +350,7 @@ class _Med9State extends State<Med9> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Duration of Prior Dose (days)",
@@ -395,9 +360,9 @@ class _Med9State extends State<Med9> {
                         final x = double.tryParse(value);
                         setState(() {
                           durationPriorDose1 = x ?? 0; // handle null and String
-                          totalPriorDose1 = priorDosePerDay1 * durationPriorDose1;
+                          totalPriorDose1 =
+                              priorDosePerDay1 * durationPriorDose1;
                           totalPriorDose1Text.text =
-
                               (totalPriorDose1).toStringAsFixed(2) + "mg";
                           calcTotalCumulativeDose();
                         });
@@ -415,11 +380,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Prior Dose (mg)",
                         hintText: "0mg",
@@ -433,7 +398,7 @@ class _Med9State extends State<Med9> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Prior Dose per Day (mg) 2",
@@ -443,7 +408,8 @@ class _Med9State extends State<Med9> {
                         final x = double.tryParse(value);
                         setState(() {
                           priorDosePerDay2 = x ?? 0; // handle null and String
-                          totalPriorDose2 = priorDosePerDay2 * durationPriorDose2;
+                          totalPriorDose2 =
+                              priorDosePerDay2 * durationPriorDose2;
                           totalPriorDose2Text.text =
                               (totalPriorDose2).toStringAsFixed(2) + "mg";
                           calcTotalCumulativeDose();
@@ -456,7 +422,7 @@ class _Med9State extends State<Med9> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Duration of Prior Dose (days) 2",
@@ -466,9 +432,9 @@ class _Med9State extends State<Med9> {
                         final x = double.tryParse(value);
                         setState(() {
                           durationPriorDose2 = x ?? 0; // handle null and String
-                          totalPriorDose2 = priorDosePerDay2 * durationPriorDose2;
+                          totalPriorDose2 =
+                              priorDosePerDay2 * durationPriorDose2;
                           totalPriorDose2Text.text =
-
                               (totalPriorDose2).toStringAsFixed(2) + "mg";
 
                           calcTotalCumulativeDose();
@@ -478,7 +444,6 @@ class _Med9State extends State<Med9> {
                           calcDaysRemaining120mg();
                           calcDaysRemaining150mg();
                           calcDaysRemaining180mg();
-
                         });
                       }),
                 ),
@@ -494,11 +459,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Prior Dose (mg) 2",
                         hintText: "0mg",
@@ -516,18 +481,17 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Cumulative Dose (mg)",
                         hintText: "0mg",
                         labelStyle: TextStyle(color: Colors.purple)),
                   ),
                 ),
-
 
                 //Dose Needed for 120 mg
                 Padding(
@@ -540,11 +504,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dose Needed for 120mg/kg",
                         hintText: "0mg",
@@ -563,11 +527,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dose Needed for 150mg/kg",
                         hintText: "0mg",
@@ -586,11 +550,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dose Needed for 180mg/kg",
                         hintText: "0mg",
@@ -609,11 +573,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dose Remaining @ 120mg/kg",
                         hintText: "0mg",
@@ -632,11 +596,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dose Remaining @ 150mg/kg",
                         hintText: "0mg",
@@ -655,11 +619,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Dose Remaining @ 180mg/kg",
                         hintText: "0mg",
@@ -678,11 +642,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Days Remaining @ 120mg/kg",
                         hintText: "0 days",
@@ -701,11 +665,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Days Remaining @ 150mg/kg",
                         hintText: "0 days",
@@ -716,7 +680,7 @@ class _Med9State extends State<Med9> {
                 //Days Remaining for 180 mg
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 0),
+                      left: 20, right: 20, top: 30, bottom: 60),
                   child: TextField(
                     controller: daysRemaining180mgText,
                     readOnly: true,
@@ -724,11 +688,11 @@ class _Med9State extends State<Med9> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total Days Remaining @ 180mg/kg",
                         hintText: "0 days",
@@ -741,4 +705,3 @@ class _Med9State extends State<Med9> {
         ));
   }
 }
-
