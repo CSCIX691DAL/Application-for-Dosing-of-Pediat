@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 class Med4 extends StatefulWidget {
   Med4(
       {Key? key,
-        required this.index,
-        required this.medications,
-        required this.favMedications})
+      required this.index,
+      required this.medications,
+      required this.favMedications})
       : super(key: key);
 
   dynamic index;
@@ -70,8 +70,6 @@ class _Med4State extends State<Med4> {
   final int mgPermLInf = 10;
   double mlNeededInf = 0;
 
-
-
   late FocusNode myFocusNode;
 
   @override
@@ -89,12 +87,11 @@ class _Med4State extends State<Med4> {
 
   void calcDosageNeededInj() {
     totalDoseInj = concentrationInj * childWeightInj;
-    totalDoseInjText.text =
-        (totalDoseInj).toStringAsFixed(2) + " mg";
+    totalDoseInjText.text = (totalDoseInj).toStringAsFixed(2) + " mg";
   }
 
   void calcMgPerTreamentInj() {
-     mgPerTreatmentInj = totalDoseInj / numDosesInj;
+    mgPerTreatmentInj = totalDoseInj / numDosesInj;
     if (mgPerTreatmentInj.isNaN || mgPerTreatmentInj.isInfinite) {
       mgPerTreatmentInjText.text = "0 mg/dose";
     } else {
@@ -113,15 +110,13 @@ class _Med4State extends State<Med4> {
     if (mLNeededInj.isNaN || mLNeededInj.isInfinite) {
       mLNeededInjText.text = "0 mL";
     } else {
-      mLNeededInjText.text =
-      (mLNeededInj).toStringAsFixed(2) + " mL";
+      mLNeededInjText.text = (mLNeededInj).toStringAsFixed(2) + " mL";
     }
   }
 
   void calcTotalDoseOral() {
     totalDoseOral = concentrationOral * childWeightOral;
     totalDoseOralText.text = (totalDoseOral).toStringAsFixed(2) + " mg";
-
   }
 
   void calcMgPerTreatmentOral() {
@@ -141,7 +136,7 @@ class _Med4State extends State<Med4> {
 
   void calcTabletsOral() {
     tabletsNeededOral = mgTotalOral / mgPerTabletOral;
-    if(tabletsNeededOral.isNaN || tabletsNeededOral.isInfinite) {
+    if (tabletsNeededOral.isNaN || tabletsNeededOral.isInfinite) {
       tabletsNeededOralText.text = "0 Tablets";
     } else {
       tabletsNeededOralText.text =
@@ -156,7 +151,7 @@ class _Med4State extends State<Med4> {
 
   void calcMgPerTreatmentInf() {
     mgPerTreatmentInf = totalDoseInf / numDosesInf;
-    if(mgPerTreatmentInf.isNaN || mgPerTreatmentInf.isInfinite) {
+    if (mgPerTreatmentInf.isNaN || mgPerTreatmentInf.isInfinite) {
       mgPerTreatmentInfText.text = "0 mg";
     } else {
       mgPerTreatmentInfText.text =
@@ -174,8 +169,7 @@ class _Med4State extends State<Med4> {
     if (mlNeededInf.isNaN || mlNeededInf.isInfinite) {
       mLNeededInfText.text = "0 mL";
     } else {
-      mLNeededInfText.text =
-          (mlNeededInf).toStringAsFixed(2) + " mL";
+      mLNeededInfText.text = (mlNeededInf).toStringAsFixed(2) + " mL";
     }
   }
 
@@ -232,678 +226,673 @@ class _Med4State extends State<Med4> {
                     // *** INJECTION TAB ***
                     SingleChildScrollView(
                         child: Column(
-                          children: [
-                            // Concentration needed
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                      children: [
+                        // Concentration needed
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: "Concentration Needed (mg/kg/day)",
-                                    hintText: "Concentration Needed (mg/kg/day)",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = double.tryParse(value);
-                                    setState(() {
-                                      concentrationInj = x ?? 0;
-                                      totalDoseInj =
-                                          concentrationInj * childWeightInj;
-                                      totalDoseInjText.text =
-                                          (totalDoseInj).toStringAsFixed(2) +
-                                              "mg"; // handle null and String
-
-                                      calcDosageNeededInj();
-                                      calcMgPerTreamentInj();
-                                      calcMgTotalInj();
-                                      calcMlTotalInj();
-                                    });
-                                  }),
-                            ),
-
-                            // Child's weight input field
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 20, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: "Child's Weight (kg)",
-                                    hintText: "Child's Weight (kg)",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = double.tryParse(value);
-                                    setState(() {
-                                      childWeightInj =
-                                          x ?? 0; // handle null and String
-                                      totalDoseInj =
-                                          concentrationInj * childWeightInj;
-                                      totalDoseInjText.text =
-                                          (totalDoseInj).toStringAsFixed(2) +
-                                              "mg"; // handle null and String
-
-                                      calcDosageNeededInj();
-                                      calcMgPerTreamentInj();
-                                      calcMgTotalInj();
-                                      calcMlTotalInj();
-                                    });
-                                  }),
-                            ),
-
-                            // Total dosage needed output field
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: totalDoseInjText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Total Dosage Needed (mg)",
-                                    hintText: "0mg",
-                                    labelStyle: TextStyle(color: Colors.purple)),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Concentration Needed (mg/kg/day)",
+                                hintText: "Concentration Needed (mg/kg/day)",
                               ),
-                            ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  concentrationInj = x ?? 0;
+                                  totalDoseInj =
+                                      concentrationInj * childWeightInj;
+                                  totalDoseInjText.text =
+                                      (totalDoseInj).toStringAsFixed(2) +
+                                          "mg"; // handle null and String
 
-                            // Number of doses
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                                  calcDosageNeededInj();
+                                  calcMgPerTreamentInj();
+                                  calcMgTotalInj();
+                                  calcMlTotalInj();
+                                });
+                              }),
+                        ),
+
+                        // Child's weight input field
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 20, bottom: 0),
+                          child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Child's Weight (kg)",
+                                hintText: "Child's Weight (kg)",
+                              ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  childWeightInj =
+                                      x ?? 0; // handle null and String
+                                  totalDoseInj =
+                                      concentrationInj * childWeightInj;
+                                  totalDoseInjText.text =
+                                      (totalDoseInj).toStringAsFixed(2) +
+                                          "mg"; // handle null and String
+
+                                  calcDosageNeededInj();
+                                  calcMgPerTreamentInj();
+                                  calcMgTotalInj();
+                                  calcMlTotalInj();
+                                });
+                              }),
+                        ),
+
+                        // Total dosage needed output field
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: totalDoseInjText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Total Dosage Needed (mg)",
+                                hintText: "0mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // Number of doses
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: false),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: "Number of Doses",
-                                    hintText: "Number of Doses",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = int.tryParse(value);
-                                    setState(() {
-                                      numDosesInj = x ?? 0;
-                                      mgPerTreatmentInj =
-                                          totalDoseInj / numDosesInj;
-                                      if (mgPerTreatmentInj.isNaN ||
-                                          mgPerTreatmentInj.isInfinite) {
-                                        mgPerTreatmentInjText.text =
-                                            (0).toStringAsFixed(2) + "mg";
-                                      } else {
-                                        mgPerTreatmentInjText.text =
-                                            (mgPerTreatmentInj)
-                                                .toStringAsFixed(2) +
-                                                "mg";
-                                      }
-                                      calcMgPerTreamentInj();
-                                    });
-                                  }),
-                            ),
-
-                            // Mg Per Treatment Output Field
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: mgPerTreatmentInjText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "#mg/Treatment",
-                                    hintText: "0mg",
-                                    labelStyle: TextStyle(color: Colors.purple)),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Number of Doses",
+                                hintText: "Number of Doses",
                               ),
-                            ),
+                              onChanged: (value) {
+                                final x = int.tryParse(value);
+                                setState(() {
+                                  numDosesInj = x ?? 0;
+                                  mgPerTreatmentInj =
+                                      totalDoseInj / numDosesInj;
+                                  if (mgPerTreatmentInj.isNaN ||
+                                      mgPerTreatmentInj.isInfinite) {
+                                    mgPerTreatmentInjText.text =
+                                        (0).toStringAsFixed(2) + "mg";
+                                  } else {
+                                    mgPerTreatmentInjText.text =
+                                        (mgPerTreatmentInj).toStringAsFixed(2) +
+                                            "mg";
+                                  }
+                                  calcMgPerTreamentInj();
+                                });
+                              }),
+                        ),
 
-                            // Number of days of treatment
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                        // Mg Per Treatment Output Field
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: mgPerTreatmentInjText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "#mg/Treatment",
+                                hintText: "0mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // Number of days of treatment
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: "Days of treatment",
-                                    hintText: "Days of treatment",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = int.tryParse(value);
-                                    setState(() {
-                                      treatmentDaysInj = x ?? 0;
-                                      mgTotalInj =
-                                          totalDoseInj * treatmentDaysInj;
-
-                                        mgTotalInjText.text =
-                                            (mgTotalInj).toStringAsFixed(2) +
-                                                "mg total";
-                                       // handle null and String
-
-                                      calcMgTotalInj();
-                                      calcMlTotalInj();
-                                    });
-                                  }),
-                            ),
-
-                            // mg Total
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: mgTotalInjText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "mg Total",
-                                    hintText: "0mg",
-                                    labelStyle: TextStyle(color: Colors.purple)),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Days of treatment",
+                                hintText: "Days of treatment",
                               ),
-                            ),
+                              onChanged: (value) {
+                                final x = int.tryParse(value);
+                                setState(() {
+                                  treatmentDaysInj = x ?? 0;
+                                  mgTotalInj = totalDoseInj * treatmentDaysInj;
 
-                            //mL total
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 60),
-                              child: TextField(
-                                controller: mLNeededInjText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Total Volume to Dispense (mL)",
-                                    hintText: "0mL",
-                                    labelStyle: TextStyle(color: Colors.purple)),
-                              ),
-                            ),
-                          ],
-                        )),
+                                  mgTotalInjText.text =
+                                      (mgTotalInj).toStringAsFixed(2) +
+                                          "mg total";
+                                  // handle null and String
+
+                                  calcMgTotalInj();
+                                  calcMlTotalInj();
+                                });
+                              }),
+                        ),
+
+                        // mg Total
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: mgTotalInjText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "mg Total",
+                                hintText: "0mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        //mL total
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 60),
+                          child: TextField(
+                            controller: mLNeededInjText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Total Volume to Dispense (mL)",
+                                hintText: "0mL",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+                      ],
+                    )),
 
                     // *** ORAL TAB ***
                     SingleChildScrollView(
                         child: Column(
-                          children: [
-                            // Concentration needed
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                      children: [
+                        // Concentration needed
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 1.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.indigo, width: 2.0),
-                                    ),
-                                    labelText: "Concentration Needed (mg/kg/day)",
-                                    hintText: "0 mg/kg/day",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = double.tryParse(value);
-                                    setState(() {
-                                      concentrationOral = x ?? 0;
-                                      calcTotalDoseOral();
-                                      calcMgPerTreatmentOral();
-                                      calcMgTotalOral();
-                                      calcTabletsOral();
-                                    });
-                                  }),
-                            ),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.indigo, width: 2.0),
+                                ),
+                                labelText: "Concentration Needed (mg/kg/day)",
+                                hintText: "0 mg/kg/day",
+                              ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  concentrationOral = x ?? 0;
+                                  calcTotalDoseOral();
+                                  calcMgPerTreatmentOral();
+                                  calcMgTotalOral();
+                                  calcTabletsOral();
+                                });
+                              }),
+                        ),
 
-                            //Child's Weight Input
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                        //Child's Weight Input
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 1.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.indigo, width: 2.0),
-                                    ),
-                                    labelText: "Child's Weight (kg)",
-                                    hintText: "0 kg",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = double.tryParse(value);
-                                    setState(() {
-                                      childWeightOral = x ?? 0;
-                                      calcTotalDoseOral();
-                                      calcMgPerTreatmentOral();
-                                      calcMgTotalOral();
-                                      calcTabletsOral();
-                                    });
-                                  }),
-                            ),
-
-                            // Total Dose Output
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: totalDoseOralText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Total Dose Needed (mg)",
-                                    hintText: "0 mg",
-                                    labelStyle: TextStyle(color: Colors.purple)),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.indigo, width: 2.0),
+                                ),
+                                labelText: "Child's Weight (kg)",
+                                hintText: "0 kg",
                               ),
-                            ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  childWeightOral = x ?? 0;
+                                  calcTotalDoseOral();
+                                  calcMgPerTreatmentOral();
+                                  calcMgTotalOral();
+                                  calcTabletsOral();
+                                });
+                              }),
+                        ),
 
-                            // Number of doses per day
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                        // Total Dose Output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: totalDoseOralText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Total Dose Needed (mg)",
+                                hintText: "0 mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // Number of doses per day
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: false),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 1.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.indigo, width: 2.0),
-                                    ),
-                                    labelText: "Number of doses per day",
-                                    hintText: "0 doses per day",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = int.tryParse(value);
-                                    setState(() {
-                                      numDosesOral = x ?? 0;
-                                      calcMgPerTreatmentOral();
-                                    });
-                                  }),
-                            ),
-
-                            // Mg per Treatment Output
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: mgPerTreatmentOralText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Dose per Treatment (mg/treatment)",
-                                    hintText: "0 mg/treatment",
-                                    labelStyle: TextStyle(color: Colors.purple)),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.indigo, width: 2.0),
+                                ),
+                                labelText: "Number of doses per day",
+                                hintText: "0 doses per day",
                               ),
-                            ),
+                              onChanged: (value) {
+                                final x = int.tryParse(value);
+                                setState(() {
+                                  numDosesOral = x ?? 0;
+                                  calcMgPerTreatmentOral();
+                                });
+                              }),
+                        ),
 
-                            // Treatment Days
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                  keyboardType:
+                        // Mg per Treatment Output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: mgPerTreatmentOralText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Dose per Treatment (mg/treatment)",
+                                hintText: "0 mg/treatment",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // Treatment Days
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: false),
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 1.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.indigo, width: 2.0),
-                                    ),
-                                    labelText: "Number of days of treatment",
-                                    hintText: "0 days",
-                                  ),
-                                  onChanged: (value) {
-                                    final x = int.tryParse(value);
-                                    setState(() {
-                                      treatmentDaysOral = x ?? 0;
-                                      calcMgTotalOral();
-                                      calcTabletsOral();
-                                    });
-                                  }),
-                            ),
-
-                            // Mg Total Output
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: mgTotalOralText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Mg Total",
-                                    hintText: "0 mg",
-                                    labelStyle: TextStyle(color: Colors.purple)),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.indigo, width: 2.0),
+                                ),
+                                labelText: "Number of days of treatment",
+                                hintText: "0 days",
                               ),
-                            ),
+                              onChanged: (value) {
+                                final x = int.tryParse(value);
+                                setState(() {
+                                  treatmentDaysOral = x ?? 0;
+                                  calcMgTotalOral();
+                                  calcTabletsOral();
+                                });
+                              }),
+                        ),
 
-                            // Tablets total output
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 30, bottom: 0),
-                              child: TextField(
-                                controller: tabletsNeededOralText,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.purple, width: 2.0),
-                                    ),
-                                    labelText: "Tablets Needed Total",
-                                    hintText: "0 tablets",
-                                    labelStyle: TextStyle(color: Colors.purple)),
-                              ),
-                            ),
-                          ],
-                        )),
+                        // Mg Total Output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: mgTotalOralText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Mg Total",
+                                hintText: "0 mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // Tablets total output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: tabletsNeededOralText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Tablets Needed Total",
+                                hintText: "0 tablets",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+                      ],
+                    )),
 
                     // *** INFUSION TAB ***
                     SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: TextField(
-                                keyboardType:
-                                const TextInputType.numberWithOptions(
-                                    decimal: true),
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Concentration Needed (mg/kg/day)",
-                                  hintText: "Concentration Needed (mg/kg/day)",
-                                ),
-                                onChanged: (value) {
-                                  final x = double.tryParse(value);
-                                  setState(() {
-                                    concentrationInf = x ?? 0;
-                                    totalDoseInf =
-                                        concentrationInf * childWeightInf;
-                                    totalDoseInfText.text =
-                                        (totalDoseInf).toStringAsFixed(2) +
-                                            "mg"; // handle null and String
-
-                                    calcTotalDoseInf();
-                                    calcMgPerTreatmentInf();
-                                    calcMgTotalInf();
-                                    calcMlTotalInf();
-                                  });
-                                }),
-                          ),
-
-                          // Child's weight input field
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 20, bottom: 0),
-                            child: TextField(
-                                keyboardType:
-                                const TextInputType.numberWithOptions(
-                                    decimal: true),
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Child's Weight (kg)",
-                                  hintText: "Child's Weight (kg)",
-                                ),
-                                onChanged: (value) {
-                                  final x = double.tryParse(value);
-                                  setState(() {
-                                    childWeightInf =
-                                        x ?? 0; // handle null and String
-                                    totalDoseInf =
-                                        concentrationInf * childWeightInf;
-                                    totalDoseInfText.text =
-                                        (totalDoseInf).toStringAsFixed(2) +
-                                            "mg"; // handle null and String
-
-                                    calcTotalDoseInf();
-                                    calcMgPerTreatmentInf();
-                                    calcMgTotalInf();
-                                    calcMlTotalInf();
-                                  });
-                                }),
-                          ),
-
-                          // Total dosage needed output field
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: TextField(
-                              controller: totalDoseInfText,
-                              readOnly: true,
+                        child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                               decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  labelText: "Total Dosage Needed (mg)",
-                                  hintText: "0mg",
-                                  labelStyle: TextStyle(color: Colors.purple)),
-                            ),
-                          ),
+                                border: OutlineInputBorder(),
+                                labelText: "Concentration Needed (mg/kg/day)",
+                                hintText: "Concentration Needed (mg/kg/day)",
+                              ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  concentrationInf = x ?? 0;
+                                  totalDoseInf =
+                                      concentrationInf * childWeightInf;
+                                  totalDoseInfText.text =
+                                      (totalDoseInf).toStringAsFixed(2) +
+                                          "mg"; // handle null and String
 
-                          // Number of doses
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: TextField(
-                                keyboardType:
-                                const TextInputType.numberWithOptions(
-                                    decimal: false),
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Number of Doses",
-                                  hintText: "Number of Doses",
+                                  calcTotalDoseInf();
+                                  calcMgPerTreatmentInf();
+                                  calcMgTotalInf();
+                                  calcMlTotalInf();
+                                });
+                              }),
+                        ),
+
+                        // Child's weight input field
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 20, bottom: 0),
+                          child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Child's Weight (kg)",
+                                hintText: "Child's Weight (kg)",
+                              ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  childWeightInf =
+                                      x ?? 0; // handle null and String
+                                  totalDoseInf =
+                                      concentrationInf * childWeightInf;
+                                  totalDoseInfText.text =
+                                      (totalDoseInf).toStringAsFixed(2) +
+                                          "mg"; // handle null and String
+
+                                  calcTotalDoseInf();
+                                  calcMgPerTreatmentInf();
+                                  calcMgTotalInf();
+                                  calcMlTotalInf();
+                                });
+                              }),
+                        ),
+
+                        // Total dosage needed output field
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: totalDoseInfText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
                                 ),
-                                onChanged: (value) {
-                                  final x = int.tryParse(value);
-                                  setState(() {
-                                    numDosesInf = x ?? 0;
-                                    mgPerTreatmentInf =
-                                        totalDoseInf / numDosesInf;
-                                    if (mgPerTreatmentInf.isNaN ||
-                                        mgPerTreatmentInf.isInfinite) {
-                                      mgPerTreatmentInfText.text =
-                                          (0).toStringAsFixed(2) + " mg";
-                                    } else {
-                                      mgPerTreatmentInfText.text =
-                                          (mgPerTreatmentInf)
-                                              .toStringAsFixed(2) +
-                                              " mg";
-                                    }
-                                    calcMgPerTreatmentInf();
-                                  });
-                                }),
-                          ),
-
-                          // Mg Per Treatment Output Field
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: TextField(
-                              controller: mgPerTreatmentInfText,
-                              readOnly: true,
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  labelText: "#mg/Treatment",
-                                  hintText: "0mg",
-                                  labelStyle: TextStyle(color: Colors.purple)),
-                            ),
-                          ),
-
-                          // Number of days of treatment
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: TextField(
-                                keyboardType:
-                                const TextInputType.numberWithOptions(
-                                    decimal: true),
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Days of treatment",
-                                  hintText: "Days of treatment",
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
                                 ),
-                                onChanged: (value) {
-                                  final x = int.tryParse(value);
-                                  setState(() {
-                                    treatmentDaysInf = x ?? 0;
-                                    mgTotalInf =
-                                        totalDoseInf * treatmentDaysInf;
-
-                                    mgTotalInfText.text =
-                                        (mgTotalInf).toStringAsFixed(2) +
-                                            "mg total";
-                                    // handle null and String
-
-                                    calcMgTotalInf();
-                                    calcMlTotalInf();
-                                  });
-                                }),
+                                labelText: "Total Dosage Needed (mg)",
+                                hintText: "0mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
                           ),
+                        ),
 
-                          // mg Total
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: TextField(
-                              controller: mgTotalInfText,
-                              readOnly: true,
+                        // Number of doses
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: false),
                               decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  labelText: "mg Total",
-                                  hintText: "0mg",
-                                  labelStyle: TextStyle(color: Colors.purple)),
-                            ),
-                          ),
+                                border: OutlineInputBorder(),
+                                labelText: "Number of Doses",
+                                hintText: "Number of Doses",
+                              ),
+                              onChanged: (value) {
+                                final x = int.tryParse(value);
+                                setState(() {
+                                  numDosesInf = x ?? 0;
+                                  mgPerTreatmentInf =
+                                      totalDoseInf / numDosesInf;
+                                  if (mgPerTreatmentInf.isNaN ||
+                                      mgPerTreatmentInf.isInfinite) {
+                                    mgPerTreatmentInfText.text =
+                                        (0).toStringAsFixed(2) + " mg";
+                                  } else {
+                                    mgPerTreatmentInfText.text =
+                                        (mgPerTreatmentInf).toStringAsFixed(2) +
+                                            " mg";
+                                  }
+                                  calcMgPerTreatmentInf();
+                                });
+                              }),
+                        ),
 
-                          //mL total
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 60),
-                            child: TextField(
-                              controller: mLNeededInfText,
-                              readOnly: true,
+                        // Mg Per Treatment Output Field
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: mgPerTreatmentInfText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "#mg/Treatment",
+                                hintText: "0mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        // Number of days of treatment
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                               decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  labelText: "Total Volume to Dispense (mL)",
-                                  hintText: "0mL",
-                                  labelStyle: TextStyle(color: Colors.purple)),
-                            ),
-                          ),
-                        ],
+                                border: OutlineInputBorder(),
+                                labelText: "Days of treatment",
+                                hintText: "Days of treatment",
+                              ),
+                              onChanged: (value) {
+                                final x = int.tryParse(value);
+                                setState(() {
+                                  treatmentDaysInf = x ?? 0;
+                                  mgTotalInf = totalDoseInf * treatmentDaysInf;
 
+                                  mgTotalInfText.text =
+                                      (mgTotalInf).toStringAsFixed(2) +
+                                          "mg total";
+                                  // handle null and String
+
+                                  calcMgTotalInf();
+                                  calcMlTotalInf();
+                                });
+                              }),
+                        ),
+
+                        // mg Total
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: mgTotalInfText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "mg Total",
+                                hintText: "0mg",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+
+                        //mL total
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 60),
+                          child: TextField(
+                            controller: mLNeededInfText,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Total Volume to Dispense (mL)",
+                                hintText: "0mL",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
+                        ),
+                      ],
                     )),
                   ],
                 ))));
