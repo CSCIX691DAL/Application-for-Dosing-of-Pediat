@@ -18,62 +18,39 @@ class Med15 extends StatefulWidget {
   _Med15State createState() => _Med15State();
 }
 
-class _Med15State extends State<Med15> {
-  TextEditingController totalDoseNeededMgT1Text = TextEditingController();
-  TextEditingController totalDoseNeededMlT1Text = TextEditingController();
+class _Med15State extends State<Med15> with TickerProviderStateMixin {
+  TextEditingController drugConcentrationNeededT1Text = TextEditingController();
   TextEditingController dosesPerDayT1Text = TextEditingController();
-  TextEditingController dosesPerDay2T1Text = TextEditingController();
-  TextEditingController drugRequiredT1Text = TextEditingController();
+  TextEditingController mgPerDoseT1Text = TextEditingController();
+  TextEditingController numTabletsPerDoseT1Text = TextEditingController();
   TextEditingController tabletsToDispenseT1Text = TextEditingController();
-  TextEditingController numMgText = TextEditingController();
-
-  TextEditingController totalDoseNeededText = TextEditingController();
-  TextEditingController numTabsNeededText = TextEditingController();
-  TextEditingController numTabFinal = TextEditingController();
-
-  TextEditingController drugRequiredT2Text = TextEditingController();
-  TextEditingController dosesPerDayT2Text = TextEditingController();
-  TextEditingController dosesPerDay2T2Text = TextEditingController();
-  TextEditingController tabletsToDispenseT2Text = TextEditingController();
-  TextEditingController numTabsNeededT2Text = TextEditingController();
-
-  int numTabsNeeded = 0;
-  int numTabsNeededT2 = 0;
-
-  double drugRequiredNeeded = 0;
-
-  double numMg = 0;
-  double totalDoseNeeded = 0;
 
   double concentrationNeededT1 = 0;
   double childWeightT1 = 0;
-  double totalDoseNeededMgT1 = 0;
-  double totalDoseNeededMlT1 = 0;
+  double drugConcentrationNeededT1 = 0;
   double drugConcentrationT1 = 0;
-  double dosesPerDayT1 = 0;
-  double dosesPerDay2T1 = 0;
-  double drugRequiredT1 = 0;
+  int dosesPerDayT1 = 0;
+  double mgPerDoseT1 = 0;
+  double mgPerTabletT1 = 0;
+  double numTabletsPerDoseT1 = 0;
   int numDaysTreatmentT1 = 0;
-  double tabletsToDispenseT1 = 0;
+  int tabletsToDispenseT1 = 0;
 
-  double concentrationNeededT2 = 0;
-  double drugRequiredT2 = 0;
-  double dosesPerDayT2 = 0;
-  double dosesPerDay2T2 = 0;
+  TextEditingController dosesPerDayT2Text = TextEditingController();
+  TextEditingController mgPerDoseT2Text = TextEditingController();
+  TextEditingController numTabletsPerDoseT2Text = TextEditingController();
+  TextEditingController tabletsToDispenseT2Text = TextEditingController();
+
+  double drugConcentrationNeededT2 = 0;
+  double mgPerDoseT2 = 0;
+  double mgPerTabletT2 = 0;
+  double numTabletsPerDoseT2 = 0;
+  int dosesPerDayT2 = 0;
   int numDaysTreatmentT2 = 0;
-  double tabletsToDispenseT2 = 0;
-
-  double numDaysTreatment = 0;
-
-  List<int> mgPerTabletT2Items = [1, 5];
-  int mgPerTabletT2 = 1;
-
-  List<int> mgPerTabletItems = [1, 5];
-  int mgPerTablet = 1;
-
-  int numTab = 1;
+  int tabletsToDispenseT2 = 0;
 
   late FocusNode myFocusNode;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -88,68 +65,89 @@ class _Med15State extends State<Med15> {
     super.dispose();
   }
 
-  void calcDosageNeededMgT1() {
-    totalDoseNeededMgT1 = concentrationNeededT1 * childWeightT1;
-    totalDoseNeededMgT1Text.text =
-        (totalDoseNeededMgT1).toStringAsFixed(2) + "mg/dose";
+  void calcConcentrationNeededT1() {
+    drugConcentrationNeededT1 = concentrationNeededT1 * childWeightT1;
+    drugConcentrationNeededT1Text.text =
+        (drugConcentrationNeededT1).toStringAsFixed(2) + "mg/day";
   }
 
-  void calcDosageNeededMlT1() {
-    totalDoseNeededMlT1 = dosesPerDayT1 / totalDoseNeededMgT1;
-    if (totalDoseNeededMlT1.isNaN || totalDoseNeededMlT1.isInfinite) {
-      totalDoseNeededMlT1Text.text = (0).toStringAsFixed(2) + "mg";
+  void calcMgPerDoseT1() {
+    mgPerDoseT1 = dosesPerDayT1 / drugConcentrationNeededT1;
+    if (mgPerDoseT1.isNaN || mgPerDoseT1.isInfinite) {
+      mgPerDoseT1Text.text = (0).toStringAsFixed(2) + "mg/dose";
     } else {
-      totalDoseNeededMlT1Text.text =
-          (totalDoseNeededMlT1).toStringAsFixed(2) + "mg";
+      mgPerDoseT1Text.text = (mgPerDoseT1).toStringAsFixed(2) + "mg/dose";
     }
   }
 
-  void calcDrugRequiredT1() {
-    drugRequiredT1 = dosesPerDayT1 / totalDoseNeededMlT1;
-    if (drugRequiredT1.isNaN || drugRequiredT1.isInfinite) {
-      drugRequiredT1Text.text = (0).toStringAsFixed(2) + "mg/dose";
-    } else {
-      drugRequiredT1Text.text = (drugRequiredT1).toStringAsFixed(2) + "mg/dose";
+  void calcTabletsPerDoseT1() {
+    try {
+      numTabletsPerDoseT1 = (mgPerTabletT1 / mgPerDoseT1);
+      if (numTabletsPerDoseT1.isNaN || numTabletsPerDoseT1.isInfinite) {
+        numTabletsPerDoseT1Text.text = (0).toStringAsFixed(2) + " tablets/dose";
+      } else {
+        numTabletsPerDoseT1Text.text =
+            (numTabletsPerDoseT1).toStringAsFixed(2) + " tablets/dose";
+      }
+    } catch (e) {
+      numTabletsPerDoseT1 = 0;
+      numTabletsPerDoseT1Text.text = (0).toStringAsFixed(2) + "mL/dose";
     }
   }
 
   void calcTabletsToDispenseT1() {
-    tabletsToDispenseT1 = dosesPerDay2T1 * numDaysTreatmentT1 * numTabsNeeded;
-    tabletsToDispenseT1Text.text =
-        (tabletsToDispenseT1).toStringAsFixed(2) + "mg";
+    try {
+      tabletsToDispenseT1 =
+          (numTabletsPerDoseT1 * dosesPerDayT1 * numDaysTreatmentT1).ceil();
+      if (tabletsToDispenseT1.isNaN || tabletsToDispenseT1.isInfinite) {
+        tabletsToDispenseT1Text.text = (0).toStringAsFixed(2) + " tablets";
+      } else {
+        tabletsToDispenseT1Text.text =
+            (tabletsToDispenseT1).toStringAsFixed(2) + " tablets";
+      }
+    } catch (e) {
+      tabletsToDispenseT1 = 0;
+      tabletsToDispenseT1Text.text = (0).toString() + " tablets";
+    }
   }
 
-  void calcDrugRequiredT2() {
-    drugRequiredT2 = dosesPerDayT2 / concentrationNeededT2;
-
-    if (drugRequiredT2.isNaN || drugRequiredT2.isInfinite) {
-      drugRequiredT2Text.text = (0).toStringAsFixed(2) + "mg/dose";
+  void calcMgPerDoseT2() {
+    mgPerDoseT2 = dosesPerDayT2 / drugConcentrationNeededT2;
+    if (mgPerDoseT2.isNaN || mgPerDoseT2.isInfinite) {
+      mgPerDoseT2Text.text = (0).toStringAsFixed(2) + "mg/dose";
     } else {
-      drugRequiredT2Text.text = (drugRequiredT2).toStringAsFixed(2) + "mg/dose";
+      mgPerDoseT2Text.text = (mgPerDoseT2).toStringAsFixed(2) + "mg/dose";
+    }
+  }
+
+  void calcTabletsPerDoseT2() {
+    try {
+      numTabletsPerDoseT2 = (mgPerTabletT2 / mgPerDoseT2);
+      if (numTabletsPerDoseT2.isNaN || numTabletsPerDoseT2.isInfinite) {
+        numTabletsPerDoseT2Text.text = (0).toStringAsFixed(2) + " tablets/dose";
+      } else {
+        numTabletsPerDoseT2Text.text =
+            (numTabletsPerDoseT2).toStringAsFixed(2) + " tablets/dose";
+      }
+    } catch (e) {
+      numTabletsPerDoseT2 = 0;
+      numTabletsPerDoseT2Text.text = (0).toStringAsFixed(2) + "mL/dose";
     }
   }
 
   void calcTabletsToDispenseT2() {
-    tabletsToDispenseT2 = numTabsNeededT2 * dosesPerDay2T2 * numDaysTreatmentT2;
-    tabletsToDispenseT2Text.text =
-        (tabletsToDispenseT2).toStringAsFixed(2) + "mg";
-  }
-
-  void calcNumTabsNeeded() {
-    numTabsNeeded = (mgPerTablet / totalDoseNeededMlT1).ceil();
-    if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
-      numTabsNeededText.text = (0).toString() + " tablets/dose";
-    } else {
-      numTabsNeededText.text = (numTabsNeeded).toString() + " tablets/dose";
-    }
-  }
-
-  void calcNumTabsNeededT2() {
-    numTabsNeededT2 = (mgPerTabletT2 / drugRequiredT2).ceil();
-    if (numTabsNeededT2.isNaN || numTabsNeededT2.isInfinite) {
-      numTabsNeededT2Text.text = (0).toString() + " tablets/dose";
-    } else {
-      numTabsNeededT2Text.text = (numTabsNeededT2).toString() + " tablets/dose";
+    try {
+      tabletsToDispenseT2 =
+          (numTabletsPerDoseT2 * dosesPerDayT2 * numDaysTreatmentT2).ceil();
+      if (tabletsToDispenseT2.isNaN || tabletsToDispenseT2.isInfinite) {
+        tabletsToDispenseT2Text.text = (0).toString() + " tablets";
+      } else {
+        tabletsToDispenseT2Text.text =
+            (tabletsToDispenseT2).toString() + " tablets";
+      }
+    } catch (e) {
+      tabletsToDispenseT2 = 0;
+      tabletsToDispenseT2Text.text = (0).toString() + " tablets";
     }
   }
 
@@ -195,7 +193,7 @@ class _Med15State extends State<Med15> {
                   bottom: const TabBar(
                     tabs: [
                       Tab(text: "mg/kg/day"),
-                      Tab(text: "mg/dose"),
+                      Tab(text: "mg/day"),
                     ],
                   ),
                 ), //page background color
@@ -223,9 +221,9 @@ class _Med15State extends State<Med15> {
                                 final x = double.tryParse(value);
                                 setState(() {
                                   concentrationNeededT1 = x ?? 0;
-                                  calcDosageNeededMgT1();
-                                  calcDosageNeededMlT1();
-                                  calcDrugRequiredT1();
+                                  calcConcentrationNeededT1();
+                                  calcMgPerDoseT1();
+                                  calcTabletsPerDoseT1();
                                   calcTabletsToDispenseT1();
                                 });
                               }),
@@ -248,20 +246,20 @@ class _Med15State extends State<Med15> {
                                 final x = double.tryParse(value);
                                 setState(() {
                                   childWeightT1 = x ?? 0;
-                                  calcDosageNeededMgT1();
-                                  calcDosageNeededMlT1();
-                                  calcDrugRequiredT1();
+                                  calcConcentrationNeededT1();
+                                  calcMgPerDoseT1();
+                                  calcTabletsPerDoseT1();
                                   calcTabletsToDispenseT1();
                                 });
                               }),
                         ),
 
-                        // Total Dosage Needed
+                        // Drug concentration needed (mg/day) output field
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                            controller: totalDoseNeededMgT1Text,
+                            controller: drugConcentrationNeededT1Text,
                             readOnly: true,
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -273,43 +271,74 @@ class _Med15State extends State<Med15> {
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: "Total Dosage Needed (mg/day)",
+                                labelText: "Drug Concentration Needed (mg/day)",
                                 hintText: "0mg/day",
                                 labelStyle: TextStyle(color: Colors.purple)),
                           ),
                         ),
 
-                        // Doses per day
+                        // doses per day slider output
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "Doses per day",
-                                hintText: "0 doses per day",
+                            focusNode: myFocusNode,
+                            controller: dosesPerDayT1Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1.0),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  dosesPerDayT1 = x ?? 0;
-                                  calcDosageNeededMgT1();
-                                  calcDosageNeededMlT1();
-                                  calcDrugRequiredT1();
-                                  calcTabletsToDispenseT1();
-                                });
-                              }),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.indigo, width: 2.0),
+                              ),
+                              labelText: "Doses per Day",
+                              hintText: "0 doses per day",
+                            ),
+                          ),
                         ),
 
-                        // Drug required (mg/dose)
+                        // doses per day slider
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 0),
+                          child: Slider(
+                            value: dosesPerDayT1.toDouble(),
+                            min: 0.0,
+                            max: 5.0,
+                            divisions: 5,
+                            label: dosesPerDayT1.toString(),
+                            onChanged: (value) {
+                              myFocusNode.requestFocus();
+                              setState(() {
+                                dosesPerDayT1 = value.toInt();
+                                if (dosesPerDayT1 == 1) {
+                                  dosesPerDayT1Text.text =
+                                      (dosesPerDayT1.toString() +
+                                          " dose per day");
+                                } else {
+                                  dosesPerDayT1Text.text =
+                                      (dosesPerDayT1.toString() +
+                                          " doses per day");
+                                }
+
+                                calcMgPerDoseT1();
+                                calcTabletsPerDoseT1();
+                                calcTabletsToDispenseT1();
+                              });
+                            },
+                          ),
+                        ),
+
+                        // Mg per dose
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                            controller: totalDoseNeededMlT1Text,
+                            controller: mgPerDoseT1Text,
                             readOnly: true,
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -321,91 +350,56 @@ class _Med15State extends State<Med15> {
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: "Drug Required (mg/dose)",
+                                labelText: "mg/dose",
                                 hintText: "0mg/dose",
                                 labelStyle: TextStyle(color: Colors.purple)),
                           ),
                         ),
-                        // # of mg per Tablet
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: InputDecorator(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  labelText: "Number of mg/tablet"),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<int>(
-                                  // hint: Text('Please choose a location'),
-                                  isExpanded: true,
-                                  value: mgPerTablet,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      mgPerTablet = newValue!;
-                                      calcNumTabsNeeded();
-                                    });
-                                  },
-                                  items: mgPerTabletItems.map((value) {
-                                    return DropdownMenuItem(
-                                      child: Text(value.toString() + "mg"),
-                                      value: value,
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            )),
-                        // Number of tablets per dose
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 0),
-                          child: TextField(
-                            controller: numTabsNeededText,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.purple, width: 2.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.purple, width: 2.0),
-                              ),
-                              labelText: "Number of Tablets per dose",
-                              hintText: '0 tablets/dose',
-                              labelStyle: TextStyle(color: Colors.purple),
-                            ),
-                          ),
-                        ),
 
-                        // # of Doses per Day
+                        // Number of mg per tablet
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
                               keyboardType:
                                   const TextInputType.numberWithOptions(
-                                      decimal: true),
+                                      decimal: false),
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: "Doses per day",
-                                hintText: "0 doses per day",
+                                labelText: "mg per Tablet",
+                                hintText: "mg per Tablet",
                               ),
                               onChanged: (value) {
                                 final x = double.tryParse(value);
                                 setState(() {
-                                  dosesPerDay2T1 = x ?? 0;
-                                  calcDosageNeededMgT1();
-                                  calcDosageNeededMlT1();
-                                  calcDrugRequiredT1();
+                                  mgPerTabletT1 = x ?? 0;
+                                  calcTabletsPerDoseT1();
                                   calcTabletsToDispenseT1();
-                                  calcNumTabsNeeded();
                                 });
                               }),
+                        ),
+
+                        // Tablets per dose output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: numTabletsPerDoseT1Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.purple, width: 2.0),
+                                ),
+                                labelText: "Tablets per Dose",
+                                hintText: "0 tablets",
+                                labelStyle: TextStyle(color: Colors.purple)),
+                          ),
                         ),
 
                         // Number of days of treatment
@@ -430,7 +424,7 @@ class _Med15State extends State<Med15> {
                               }),
                         ),
 
-                        // Total # of tablets to dispense
+                        // Total volume to dispense
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 60),
@@ -447,7 +441,7 @@ class _Med15State extends State<Med15> {
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: "Number of Tablets to Dispense",
+                                labelText: "Tablets to Dispense",
                                 hintText: "0 tablets",
                                 labelStyle: TextStyle(color: Colors.purple)),
                           ),
@@ -459,7 +453,7 @@ class _Med15State extends State<Med15> {
                     SingleChildScrollView(
                         child: Column(
                       children: [
-                        // Concentration needed (mg/day)
+                        // Concentration needed
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
@@ -469,56 +463,81 @@ class _Med15State extends State<Med15> {
                                       decimal: true),
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 1.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.indigo, width: 2.0),
-                                ),
                                 labelText: "Concentration Needed (mg/day)",
-                                hintText: "0mg/day",
+                                hintText: "Concentration Needed (mg/day)",
                               ),
                               onChanged: (value) {
                                 final x = double.tryParse(value);
                                 setState(() {
-                                  concentrationNeededT2 = x ?? 0;
-                                  calcDrugRequiredT2();
+                                  drugConcentrationNeededT2 = x ?? 0;
+                                  calcMgPerDoseT2();
+                                  calcTabletsPerDoseT2();
                                   calcTabletsToDispenseT2();
-                                  calcNumTabsNeededT2();
                                 });
                               }),
                         ),
-                        // # of Doses per day
+
+                        // doses per day slider output
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "Doses per day",
-                                hintText: "0 doses per day",
+                            focusNode: myFocusNode,
+                            controller: dosesPerDayT2Text,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1.0),
                               ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  dosesPerDayT2 = x ?? 0;
-                                  calcDrugRequiredT2();
-                                  calcTabletsToDispenseT2();
-                                  calcNumTabsNeededT2();
-                                });
-                              }),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.indigo, width: 2.0),
+                              ),
+                              labelText: "Doses per Day",
+                              hintText: "0 doses per day",
+                            ),
+                          ),
                         ),
-                        // Drug required (mg/dose)
+
+                        // doses per day slider
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 0),
+                          child: Slider(
+                            value: dosesPerDayT2.toDouble(),
+                            min: 0.0,
+                            max: 5.0,
+                            divisions: 5,
+                            label: dosesPerDayT2.toString(),
+                            onChanged: (value) {
+                              myFocusNode.requestFocus();
+                              setState(() {
+                                dosesPerDayT2 = value.toInt();
+                                if (dosesPerDayT2 == 1) {
+                                  dosesPerDayT2Text.text =
+                                      (dosesPerDayT2.toString() +
+                                          " dose per day");
+                                } else {
+                                  dosesPerDayT2Text.text =
+                                      (dosesPerDayT2.toString() +
+                                          " doses per day");
+                                }
+                                calcMgPerDoseT2();
+                                calcTabletsPerDoseT2();
+                                calcTabletsToDispenseT2();
+                              });
+                            },
+                          ),
+                        ),
+
+                        // Mg per dose
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                            controller: drugRequiredT2Text,
+                            controller: mgPerDoseT2Text,
                             readOnly: true,
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -530,51 +549,41 @@ class _Med15State extends State<Med15> {
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: "Drug Required (mg/dose)",
+                                labelText: "mg/dose",
                                 hintText: "0mg/dose",
                                 labelStyle: TextStyle(color: Colors.purple)),
                           ),
                         ),
 
-                        //# of mg per Tablet
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 30, bottom: 0),
-                            child: InputDecorator(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.purple, width: 2.0),
-                                  ),
-                                  labelText: "Number of mg/Tablet"),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<int>(
-                                  // hint: Text('Please choose a location'),
-                                  isExpanded: true,
-                                  value: mgPerTabletT2,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      mgPerTabletT2 = newValue!;
-                                      calcNumTabsNeededT2();
-                                    });
-                                  },
-                                  items: mgPerTabletT2Items.map((value) {
-                                    return DropdownMenuItem(
-                                      child: Text(value.toString() + "mg"),
-                                      value: value,
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            )),
-
-                        // # of Tablets per dose
+                        // Number of mg per tablet
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 0),
                           child: TextField(
-                            controller: numTabsNeededT2Text,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: false),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "mg per Tablet",
+                                hintText: "mg per Tablet",
+                              ),
+                              onChanged: (value) {
+                                final x = double.tryParse(value);
+                                setState(() {
+                                  mgPerTabletT2 = x ?? 0;
+                                  calcTabletsPerDoseT2();
+                                  calcTabletsToDispenseT2();
+                                });
+                              }),
+                        ),
+
+                        // Tablets per dose output
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 0),
+                          child: TextField(
+                            controller: numTabletsPerDoseT2Text,
                             readOnly: true,
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -586,34 +595,12 @@ class _Med15State extends State<Med15> {
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: "Number of Tablets per dose",
-                                hintText: "0 tablets/dose",
+                                labelText: "Tablets per Dose",
+                                hintText: "0 tablets",
                                 labelStyle: TextStyle(color: Colors.purple)),
                           ),
                         ),
-                        // Doses per Day
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 0),
-                          child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "Doses per day",
-                                hintText: "0 doses per day",
-                              ),
-                              onChanged: (value) {
-                                final x = double.tryParse(value);
-                                setState(() {
-                                  dosesPerDay2T2 = x ?? 0;
-                                  calcDrugRequiredT2();
-                                  calcTabletsToDispenseT2();
-                                  calcNumTabsNeededT2();
-                                });
-                              }),
-                        ),
+
                         // Number of days of treatment
                         Padding(
                           padding: const EdgeInsets.only(
@@ -644,7 +631,7 @@ class _Med15State extends State<Med15> {
                               }),
                         ),
 
-                        // # of Tablets to dispense
+                        // Tablets to dispense
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 60),
@@ -661,7 +648,7 @@ class _Med15State extends State<Med15> {
                                   borderSide: BorderSide(
                                       color: Colors.purple, width: 2.0),
                                 ),
-                                labelText: "Number of tablets to dispense",
+                                labelText: "Number of Tablets to Dispense",
                                 hintText: "0 tablets",
                                 labelStyle: TextStyle(color: Colors.purple)),
                           ),
