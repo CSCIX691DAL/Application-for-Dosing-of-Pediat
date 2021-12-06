@@ -650,7 +650,7 @@ class _Med4State extends State<Med4> {
                         // Tablets total output
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 0),
+                              left: 20, right: 20, top: 30, bottom: 60),
                           child: TextField(
                             controller: tabletsNeededOralText,
                             readOnly: true,
