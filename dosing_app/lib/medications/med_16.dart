@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Med16 extends StatefulWidget {
   Med16(
       {Key? key,
@@ -19,6 +22,9 @@ class Med16 extends StatefulWidget {
 }
 
 class _Med16State extends State<Med16> {
+  bool isFavourited = false;
+  List<Map<String, dynamic>> favs = [];
+
   TextEditingController concentrationNeededText = TextEditingController();
   TextEditingController dosePerTabletText = TextEditingController();
   TextEditingController tabletsPerDayText = TextEditingController();
@@ -26,22 +32,49 @@ class _Med16State extends State<Med16> {
 
   double childWeight = 0;
   double drugConcentration = 0;
-  double dosePerTablet =250;
+  double dosePerTablet = 250;
   double tabletsPerDay = 0;
   double daysTreatment = 0;
   double tabletsDispense = 0;
   int numTabsNeeded = 0;
-
 
   int mgPerTablet = 10;
 
   // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
 
+  void loadFavs() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        favs = (jsonDecode(prefs.getString('favMedications')!) as List)
+            .map((dynamic e) => e as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (e) {
+      setState(() {
+        favs = [];
+      });
+    }
+  }
+
+  void getFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      try {
+        isFavourited = prefs.getBool('med16')!;
+      } catch (e) {
+        isFavourited = false;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     myFocusNode = FocusNode();
+    loadFavs();
+    getFavoriteStatus();
   }
 
   @override
@@ -52,13 +85,11 @@ class _Med16State extends State<Med16> {
 
   // Functions for each output field
   void calcDrugConcentration() {
-    if(childWeight >= 10 && childWeight <= 19.99){
+    if (childWeight >= 10 && childWeight <= 19.99) {
       drugConcentration = 62.5;
-    }
-    else if(childWeight >= 20 && childWeight <= 39.99){
+    } else if (childWeight >= 20 && childWeight <= 39.99) {
       drugConcentration = 125;
-    }
-    else{
+    } else {
       drugConcentration = 250;
     }
     concentrationNeededText.text = (drugConcentration).toStringAsFixed(2) +
@@ -66,19 +97,19 @@ class _Med16State extends State<Med16> {
   }
 
   void calcDosePerTablet() {
-    dosePerTabletText.text = (dosePerTablet).toStringAsFixed(0) +
-        "mg"; // handle null and String
+    dosePerTabletText.text =
+        (dosePerTablet).toStringAsFixed(0) + "mg"; // handle null and String
   }
 
   void calcTabletsPerDay() {
-    tabletsPerDay = drugConcentration/dosePerTablet;
+    tabletsPerDay = drugConcentration / dosePerTablet;
 
     tabletsPerDayText.text = (tabletsPerDay).toStringAsFixed(2) +
-    " tablet(s)"; // handle null and String
+        " tablet(s)"; // handle null and String
   }
 
   void calcTabletsToDispense() {
-    tabletsDispense = tabletsPerDay*daysTreatment;
+    tabletsDispense = tabletsPerDay * daysTreatment;
 
     tabletsDispenseText.text = (tabletsDispense).toStringAsFixed(0) +
         " tablet(s)"; // handle null and String
@@ -86,8 +117,7 @@ class _Med16State extends State<Med16> {
 
   @override
   Widget build(BuildContext context) {
-    Map medication = widget.medications[widget.index];
-    bool isFavourited = widget.favMedications.contains(medication);
+    Map<String, dynamic> medication = widget.medications[widget.index];
 
     return GestureDetector(
         onTap: () {
@@ -104,14 +134,21 @@ class _Med16State extends State<Med16> {
               Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           if (isFavourited) {
-                            widget.favMedications.remove(medication);
+                            favs.removeWhere(
+                                (item) => item["name"] == medication["name"]);
+                            isFavourited = false;
                           } else {
-                            widget.favMedications.add(medication);
+                            favs.add(medication);
+                            isFavourited = true;
                           }
                         });
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setString('favMedications', jsonEncode(favs));
+                        prefs.setBool('med16', isFavourited);
                       },
                       child: Icon(
                         isFavourited
@@ -133,8 +170,7 @@ class _Med16State extends State<Med16> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(
-                          decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Child's Weight (kg)",
@@ -178,8 +214,7 @@ class _Med16State extends State<Med16> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextFormField(
-                    initialValue:
-                    dosePerTablet.toStringAsFixed(0) + "mg",
+                    initialValue: dosePerTablet.toStringAsFixed(0) + "mg",
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -217,8 +252,7 @@ class _Med16State extends State<Med16> {
                       left: 20, right: 20, top: 30, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(
-                          decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "# Days of Treatment",
@@ -243,11 +277,11 @@ class _Med16State extends State<Med16> {
                       border: OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                         borderSide:
-                        BorderSide(color: Colors.purple, width: 2.0),
+                            BorderSide(color: Colors.purple, width: 2.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide:
-                        BorderSide(color: Colors.purple, width: 2.0),
+                            BorderSide(color: Colors.purple, width: 2.0),
                       ),
                       labelText: "Total # Tablets to Dispense",
                       hintText: '0 tablets',
@@ -255,8 +289,6 @@ class _Med16State extends State<Med16> {
                     ),
                   ),
                 ),
-
-
               ],
             ),
           ),

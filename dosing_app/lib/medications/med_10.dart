@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Med10 extends StatefulWidget {
   Med10(
       {Key? key,
@@ -19,6 +22,9 @@ class Med10 extends StatefulWidget {
 }
 
 class _Med10State extends State<Med10> {
+  bool isFavourited = false;
+  List<Map<String, dynamic>> favs = [];
+
   TextEditingController totalDoseNeededMgT1Text = TextEditingController();
   TextEditingController drugRequiredT1Text = TextEditingController();
   TextEditingController volumeToDispenseT1Text = TextEditingController();
@@ -47,10 +53,38 @@ class _Med10State extends State<Med10> {
 
   late FocusNode myFocusNode;
 
+  void loadFavs() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        favs = (jsonDecode(prefs.getString('favMedications')!) as List)
+            .map((dynamic e) => e as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (e) {
+      setState(() {
+        favs = [];
+      });
+    }
+  }
+
+  void getFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      try {
+        isFavourited = prefs.getBool('med10')!;
+      } catch (e) {
+        isFavourited = false;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     myFocusNode = FocusNode();
+    loadFavs();
+    getFavoriteStatus();
   }
 
   @override
@@ -121,8 +155,7 @@ class _Med10State extends State<Med10> {
 
   @override
   Widget build(BuildContext context) {
-    Map medication = widget.medications[widget.index];
-    bool isFavourited = widget.favMedications.contains(medication);
+    Map<String, dynamic> medication = widget.medications[widget.index];
 
     return GestureDetector(
         onTap: () {
@@ -141,14 +174,22 @@ class _Med10State extends State<Med10> {
                     Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               setState(() {
                                 if (isFavourited) {
-                                  widget.favMedications.remove(medication);
+                                  favs.removeWhere((item) =>
+                                      item["name"] == medication["name"]);
+                                  isFavourited = false;
                                 } else {
-                                  widget.favMedications.add(medication);
+                                  favs.add(medication);
+                                  isFavourited = true;
                                 }
                               });
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString(
+                                  'favMedications', jsonEncode(favs));
+                              prefs.setBool('med10', isFavourited);
                             },
                             child: Icon(
                               isFavourited

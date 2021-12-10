@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Med15 extends StatefulWidget {
   Med15(
       {Key? key,
@@ -19,6 +22,9 @@ class Med15 extends StatefulWidget {
 }
 
 class _Med15State extends State<Med15> with TickerProviderStateMixin {
+  bool isFavourited = false;
+  List<Map<String, dynamic>> favs = [];
+
   TextEditingController drugConcentrationNeededT1Text = TextEditingController();
   TextEditingController dosesPerDayT1Text = TextEditingController();
   TextEditingController mgPerDoseT1Text = TextEditingController();
@@ -54,10 +60,38 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
   late FocusNode myFocusNode;
   late TabController _tabController;
 
+  void loadFavs() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        favs = (jsonDecode(prefs.getString('favMedications')!) as List)
+            .map((dynamic e) => e as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (e) {
+      setState(() {
+        favs = [];
+      });
+    }
+  }
+
+  void getFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      try {
+        isFavourited = prefs.getBool('med15')!;
+      } catch (e) {
+        isFavourited = false;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     myFocusNode = FocusNode();
+    loadFavs();
+    getFavoriteStatus();
   }
 
   @override
@@ -155,8 +189,7 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Map medication = widget.medications[widget.index];
-    bool isFavourited = widget.favMedications.contains(medication);
+    Map<String, dynamic> medication = widget.medications[widget.index];
 
     return GestureDetector(
         onTap: () {
@@ -175,14 +208,22 @@ class _Med15State extends State<Med15> with TickerProviderStateMixin {
                     Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               setState(() {
                                 if (isFavourited) {
-                                  widget.favMedications.remove(medication);
+                                  favs.removeWhere((item) =>
+                                      item["name"] == medication["name"]);
+                                  isFavourited = false;
                                 } else {
-                                  widget.favMedications.add(medication);
+                                  favs.add(medication);
+                                  isFavourited = true;
                                 }
                               });
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString(
+                                  'favMedications', jsonEncode(favs));
+                              prefs.setBool('med15', isFavourited);
                             },
                             child: Icon(
                               isFavourited

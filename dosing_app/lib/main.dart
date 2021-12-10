@@ -1,4 +1,4 @@
-import 'package:dosing_app/medications/med_5.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'medications/med_1.dart';
@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
   // was const
   MyApp({Key? key}) : super(key: key);
 
-  List<Map<String, String>> medications = [
+  List<dynamic> favMedications = [];
+
+  List<dynamic> medications = [
     {
       'name': 'Acitretin',
       'imagePath': 'assets/Acitretin.png',
@@ -132,8 +134,6 @@ class MyApp extends StatelessWidget {
       'route': '/med17',
     },
   ];
-
-  List<Map<String, String>> favMedications = [];
 
   // This widget is the root of your application.
   @override

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'all_page.dart';
 import 'favs_page.dart';
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class HomePage extends StatefulWidget {
   // was const
   HomePage({Key? key, required this.medications, required this.favMedications})
@@ -14,7 +17,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PageController _pageController = PageController();
+  List<dynamic> favMedications = [];
+  bool isFavourited = false;
+
+  final PageController _pageController = PageController();
 
   // Changing the state of the bottom nav bar
   int _selectedIndex = 0;

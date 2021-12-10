@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Med13 extends StatefulWidget {
   Med13(
       {Key? key,
-        required this.index,
-        required this.medications,
-        required this.favMedications})
+      required this.index,
+      required this.medications,
+      required this.favMedications})
       : super(key: key);
 
   dynamic index;
@@ -19,6 +22,9 @@ class Med13 extends StatefulWidget {
 }
 
 class _Med1State extends State<Med13> {
+  bool isFavourited = false;
+  List<Map<String, dynamic>> favs = [];
+
   TextEditingController drugRequiredText = TextEditingController();
   TextEditingController numTabFinal = TextEditingController();
   TextEditingController numTabsNeededText = TextEditingController();
@@ -29,7 +35,6 @@ class _Med1State extends State<Med13> {
   double numDaysTreatment = 0;
   double numTabDispense = 0;
 
-
   List<int> numTabPerDose = [180, 360];
   int numTab = 180;
   int numTabsNeeded = 0;
@@ -37,11 +42,38 @@ class _Med1State extends State<Med13> {
   // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
 
+  void loadFavs() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        favs = (jsonDecode(prefs.getString('favMedications')!) as List)
+            .map((dynamic e) => e as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (e) {
+      setState(() {
+        favs = [];
+      });
+    }
+  }
+
+  void getFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      try {
+        isFavourited = prefs.getBool('med13')!;
+      } catch (e) {
+        isFavourited = false;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     myFocusNode = FocusNode();
-
+    loadFavs();
+    getFavoriteStatus();
   }
 
   @override
@@ -50,36 +82,33 @@ class _Med1State extends State<Med13> {
     super.dispose();
   }
 
-  void setDay(){
-    numDosePerDay.text= "2 doses";
+  void setDay() {
+    numDosePerDay.text = "2 doses";
   }
 
   // Functions for each output field
   void calcTotalDrugRequired() {
-    if(bodySurfaceArea <= 1.19){
+    if (bodySurfaceArea <= 1.19) {
       drugRequiredNeeded = 0;
       drugRequiredText.text = "Not recommended";
-    }
-    else if(bodySurfaceArea < 1.58){
+    } else if (bodySurfaceArea < 1.58) {
       drugRequiredNeeded = 540;
       drugRequiredText.text = drugRequiredNeeded.toStringAsFixed(0) + "mg BID";
-    }
-    else{
+    } else {
       drugRequiredNeeded = 720;
       drugRequiredText.text = drugRequiredNeeded.toStringAsFixed(0) + "mg BID";
     }
   }
 
-
-
   void calcNumTabsNeeded() {
-    numTabsNeeded = (drugRequiredNeeded/ numTab).ceil();
+    numTabsNeeded = (drugRequiredNeeded / numTab).ceil();
     if (numTabsNeeded.isNaN || numTabsNeeded.isInfinite) {
       numTabsNeededText.text = (0).toString() + " tablets/dose";
     } else {
       numTabsNeededText.text = (numTabsNeeded).toString() + " tablets/dose";
     }
   }
+
   void calcNumTabDispense() {
     numTabDispense = numDaysTreatment * numTabsNeeded * 2;
     numTabFinal.text = (numTabDispense).toStringAsFixed(0) + " tablets";
@@ -87,8 +116,7 @@ class _Med1State extends State<Med13> {
 
   @override
   Widget build(BuildContext context) {
-    Map medication = widget.medications[widget.index];
-    bool isFavourited = widget.favMedications.contains(medication);
+    Map<String, dynamic> medication = widget.medications[widget.index];
 
     return GestureDetector(
         onTap: () {
@@ -105,14 +133,21 @@ class _Med1State extends State<Med13> {
               Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           if (isFavourited) {
-                            widget.favMedications.remove(medication);
+                            favs.removeWhere(
+                                (item) => item["name"] == medication["name"]);
+                            isFavourited = false;
                           } else {
-                            widget.favMedications.add(medication);
+                            favs.add(medication);
+                            isFavourited = true;
                           }
                         });
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setString('favMedications', jsonEncode(favs));
+                        prefs.setBool('med13', isFavourited);
                       },
                       child: Icon(
                         isFavourited
@@ -128,14 +163,13 @@ class _Med1State extends State<Med13> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-
                 // Body surface input field
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Body Surface Area (m2)",
@@ -162,7 +196,7 @@ class _Med1State extends State<Med13> {
                           border: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
-                            BorderSide(color: Colors.purple, width: 2.0),
+                                BorderSide(color: Colors.purple, width: 2.0),
                           ),
                           labelText: "Tablet size"),
                       child: DropdownButtonHideUnderline(
@@ -200,11 +234,11 @@ class _Med1State extends State<Med13> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Drug required (mg/dose)",
                         hintText: "0mg/dose",
@@ -223,11 +257,11 @@ class _Med1State extends State<Med13> {
                       border: OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                         borderSide:
-                        BorderSide(color: Colors.purple, width: 2.0),
+                            BorderSide(color: Colors.purple, width: 2.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide:
-                        BorderSide(color: Colors.purple, width: 2.0),
+                            BorderSide(color: Colors.purple, width: 2.0),
                       ),
                       labelText: "Number of tablets per dose",
                       hintText: '0 tablets/dose',
@@ -247,11 +281,11 @@ class _Med1State extends State<Med13> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Number of doses/day",
                         hintText: "doses",
@@ -265,7 +299,7 @@ class _Med1State extends State<Med13> {
                       left: 20, right: 20, top: 20, bottom: 0),
                   child: TextField(
                       keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Number of days of Treatment",
@@ -294,19 +328,17 @@ class _Med1State extends State<Med13> {
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.purple, width: 2.0),
+                              BorderSide(color: Colors.purple, width: 2.0),
                         ),
                         labelText: "Total number of tablets to dispense",
                         hintText: "tablets",
                         labelStyle: TextStyle(color: Colors.purple)),
                   ),
                 ),
-
-
               ],
             ),
           ),

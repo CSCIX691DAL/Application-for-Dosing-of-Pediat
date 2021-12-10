@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Med9 extends StatefulWidget {
   Med9(
       {Key? key,
@@ -19,6 +22,9 @@ class Med9 extends StatefulWidget {
 }
 
 class _Med9State extends State<Med9> {
+  bool isFavourited = false;
+  List<Map<String, dynamic>> favs = [];
+
   TextEditingController concentrationNeededText = TextEditingController();
   TextEditingController totalDoseNeededText = TextEditingController();
   TextEditingController totalPriorDose1Text = TextEditingController();
@@ -69,10 +75,38 @@ class _Med9State extends State<Med9> {
   // Handle closing the keyboard when use taps anywhere else on the screen
   late FocusNode myFocusNode;
 
+  void loadFavs() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        favs = (jsonDecode(prefs.getString('favMedications')!) as List)
+            .map((dynamic e) => e as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (e) {
+      setState(() {
+        favs = [];
+      });
+    }
+  }
+
+  void getFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      try {
+        isFavourited = prefs.getBool('med9')!;
+      } catch (e) {
+        isFavourited = false;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     myFocusNode = FocusNode();
+    loadFavs();
+    getFavoriteStatus();
   }
 
   @override
@@ -104,7 +138,7 @@ class _Med9State extends State<Med9> {
 
   void calcDoseRemaining120mg() {
     doseRemaining120mg = doseNeeded120mg - totalCumulativeDose;
-    if(doseRemaining120mg < 0){
+    if (doseRemaining120mg < 0) {
       doseRemaining120mg = 0;
     }
     doseRemaining120mgText.text =
@@ -113,7 +147,7 @@ class _Med9State extends State<Med9> {
 
   void calcDoseRemaining150mg() {
     doseRemaining150mg = doseNeeded150mg - totalCumulativeDose;
-    if(doseRemaining150mg < 0){
+    if (doseRemaining150mg < 0) {
       doseRemaining150mg = 0;
     }
     doseRemaining150mgText.text =
@@ -122,7 +156,7 @@ class _Med9State extends State<Med9> {
 
   void calcDoseRemaining180mg() {
     doseRemaining180mg = doseNeeded180mg - totalCumulativeDose;
-    if(doseRemaining180mg < 0){
+    if (doseRemaining180mg < 0) {
       doseRemaining180mg = 0;
     }
     doseRemaining180mgText.text =
@@ -131,7 +165,7 @@ class _Med9State extends State<Med9> {
 
   void calcDaysRemaining120mg() {
     daysRemaining120mg = doseRemaining120mg / dosePerDay;
-    if(daysRemaining120mg < 0){
+    if (daysRemaining120mg < 0) {
       daysRemaining120mg = 0;
     }
     daysRemaining120mgText.text =
@@ -140,7 +174,7 @@ class _Med9State extends State<Med9> {
 
   void calcDaysRemaining150mg() {
     daysRemaining150mg = doseRemaining150mg / dosePerDay;
-    if(daysRemaining150mg < 0){
+    if (daysRemaining150mg < 0) {
       daysRemaining150mg = 0;
     }
     daysRemaining150mgText.text =
@@ -149,7 +183,7 @@ class _Med9State extends State<Med9> {
 
   void calcDaysRemaining180mg() {
     daysRemaining180mg = doseRemaining180mg / dosePerDay;
-    if(daysRemaining180mg < 0){
+    if (daysRemaining180mg < 0) {
       daysRemaining180mg = 0;
     }
     daysRemaining180mgText.text =
@@ -184,8 +218,7 @@ class _Med9State extends State<Med9> {
 
   @override
   Widget build(BuildContext context) {
-    Map medication = widget.medications[widget.index];
-    bool isFavourited = widget.favMedications.contains(medication);
+    Map<String, dynamic> medication = widget.medications[widget.index];
 
     return GestureDetector(
         onTap: () {
@@ -202,14 +235,21 @@ class _Med9State extends State<Med9> {
               Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           if (isFavourited) {
-                            widget.favMedications.remove(medication);
+                            favs.removeWhere(
+                                (item) => item["name"] == medication["name"]);
+                            isFavourited = false;
                           } else {
-                            widget.favMedications.add(medication);
+                            favs.add(medication);
+                            isFavourited = true;
                           }
                         });
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setString('favMedications', jsonEncode(favs));
+                        prefs.setBool('med9', isFavourited);
                       },
                       child: Icon(
                         isFavourited
